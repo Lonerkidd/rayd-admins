@@ -2,20 +2,26 @@ import mongoose, { Schema } from 'mongoose';
 
 // Define the Blog interface
 interface IBlog {
-  title: string;
-  content: string;
-  image: string;
-  slug: string;
-  excerpt: string;
-  // author: mongoose.Types.ObjectId | string; // Add proper typing for author
-  video?: string;
-  tags?: string[];
-  createdAt: Date;
-  updatedAt: Date;
+    _id: string; // Optional ID for the blog post
+    title: string;
+    content: string;
+    image: string;
+    slug: string;
+    excerpt: string;
+    client:string;
+    //author: mongoose.Types.ObjectId | string; // Add proper typing for author
+    video?: string;
+    tags?: string[];
+    createdAt: Date;
+    updatedAt: Date;
 }
 
 // Create Schema for the company's blog post
 const blogSchema = new Schema<IBlog>({
+    _id: {
+        type: String,
+        default: () => new mongoose.Types.ObjectId().toString(),
+    },
     title: {
         type: String,
         required: [true, 'Title is required'],
@@ -33,6 +39,10 @@ const blogSchema = new Schema<IBlog>({
     video: {
         type: String,
         required: false,
+    },
+    client:{
+     type:String,
+     required:true,
     },
     tags: [{
         type: String,

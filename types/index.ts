@@ -61,7 +61,7 @@ export interface FormValues {
 
 //Portfolio Types
 export interface PortfolioItem {
-    id?: string;
+    _id: string;
     title: string;
     content: string;
     image: string;
@@ -70,3 +70,17 @@ export interface PortfolioItem {
     videoLink?: string;
     photoLink?: string;
   }
+
+export interface Project {
+  _id?: string;
+  title: string;
+  content: string;
+  image?: string;
+  slug: string;
+  excerpt: string;
+  video?: string;
+  tags?: string[];
+  createdAt?: Date;
+  updatedAt?: Date;
+  author?: string;
+}

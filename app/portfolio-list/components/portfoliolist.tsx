@@ -27,6 +27,7 @@ const PortfolioList: React.FC = () => {
         });
       }
     } catch (error) {
+      console.error("Error fetching portfolio items:", error);
       toast({
         title: "Error",
         description: "Failed to fetch portfolio items",
@@ -40,7 +41,7 @@ const PortfolioList: React.FC = () => {
     fetchPortfolioItems();
     return () => {
       setLoading(false);
-    }
+    };
   }, []);
 
   const handleDelete = async (id: string) => {
@@ -54,6 +55,7 @@ const PortfolioList: React.FC = () => {
       // Refresh the list after delete
       fetchPortfolioItems();
     } catch (error) {
+      console.error("Error deleting portfolio item:", error);
       toast({
         title: "Error",
         description: "Failed to delete portfolio item",
@@ -106,8 +108,8 @@ const PortfolioList: React.FC = () => {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {portfolioItems.map((item) => (
-            <div key={item.id} className="relative group">
-              <PortfolioCard item={item} onDelete={() => item.id && handleDelete(item.id)} isDeleting={deleting === item.id} />
+            <div key={item._id} className="relative group">
+              <PortfolioCard item={item} onDelete={() => item._id && handleDelete(item._id)} isDeleting={deleting === item._id} />
             </div>
           ))}
         </div>

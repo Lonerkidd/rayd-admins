@@ -2,7 +2,7 @@
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { PortfolioItem } from '@/types';
-import { ExternalLink, Video, Trash, Edit } from 'lucide-react';
+import {  Video, Trash, Edit } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 
 interface PortfolioCardProps {
@@ -16,7 +16,7 @@ const PortfolioCard: React.FC<PortfolioCardProps> = ({ item, onDelete, isDeletin
   
   const handleEditClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    router.push(`/blogs/edit/${item.id}`);
+    router.push(`/projects/edit/${item._id}`);
   };
 
   const handleDeleteClick = (e: React.MouseEvent) => {
@@ -28,7 +28,7 @@ const PortfolioCard: React.FC<PortfolioCardProps> = ({ item, onDelete, isDeletin
 
   return (
     <div
-      onClick={() => router.push(`/blogs/${item.id}`)}
+      onClick={() => router.push(`/projects/${item._id}`)}
       className="flex flex-col bg-transparent rounded-lg shadow-sm overflow-hidden border cursor-pointer hover:shadow-md transition-shadow duration-200"
     >
       <div className="h-40 bg-gray-200 relative">

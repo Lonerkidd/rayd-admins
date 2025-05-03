@@ -53,7 +53,7 @@ export async function uploadImage(file: File): Promise<{ url: string }> {
 // Get all posts
 export async function getPosts(): Promise<PortfolioItem[]> {
   try {
-    const response = await fetch('/api/portfolio', {
+    const response = await fetch('/api/getproject', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -123,7 +123,7 @@ export async function updatePost(id: string, data: FormData | Partial<PortfolioI
         },
       });
     } else {
-      response = await axios.put(`/api/portfolio/${id}`, data, {
+      response = await axios.put(`/api/updatePost/${id}`, data, {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -140,7 +140,7 @@ export async function updatePost(id: string, data: FormData | Partial<PortfolioI
 // Delete a post
 export async function deletePost(id: string): Promise<{ message: string }> {
   try {
-    const response = await fetch(`/api/portfolio/${id}`, {
+    const response = await fetch(`/api/deletePost/${id}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',

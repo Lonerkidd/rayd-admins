@@ -8,7 +8,7 @@ const PortfolioPage = () => {
   const router = useRouter();
   return (
     
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-7xl mx-auto m-5">
         <BreadcrumbBar />
         <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
           <div>
