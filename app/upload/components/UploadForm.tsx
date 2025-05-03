@@ -53,13 +53,13 @@ const UploadForm: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
     setIsSubmitting(true);
 
     try {
-      let imageUrl = data.photoLink || '';
+      //let imageUrl = data.photoLink || '';
 
       // If an image file is selected, upload it and get URL
-      if (selectedImage) {
-        const uploadRes = await uploadImage(selectedImage); // should return { url }
-        imageUrl = uploadRes?.url || '';
-      }
+      // if (selectedImage) {
+      //   const uploadRes = await uploadImage(selectedImage); // should return { url }
+      //   imageUrl = uploadRes?.url || '';
+      // }
 
       const payload = {
         title: data.title,
@@ -67,7 +67,7 @@ const UploadForm: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
         category: data.category,
         client: data.client,
         video: data.videoLink || '',
-        image: imageUrl,
+        image: selectedImage,
       };
 
       const response = await fetch('/api/addproject', {

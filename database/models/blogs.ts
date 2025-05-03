@@ -5,8 +5,8 @@ interface IBlog {
     _id: string; 
     title: string;
     content: string;
-    image: string;
-    client:string;
+    image: File | null; // Assuming image is a file type, adjust as necessary
+    client: string;
     video?: string;
     createdAt: Date;
     updatedAt: Date;
@@ -29,16 +29,16 @@ const blogSchema = new Schema<IBlog>({
         required: [true, 'Content is required'],
     },
     image: {
-        type: String,
+        type: Buffer, // BSON type to store binary data like images
         required: false,
     },
     video: {
         type: String,
         required: false,
     },
-    client:{
-     type:String,
-     required:true,
+    client: {
+        type: String,
+        required: true,
     },
     createdAt: {
         type: Date,
