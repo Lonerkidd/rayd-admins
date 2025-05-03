@@ -1,0 +1,119 @@
+"use client";
+import React, { useState, useEffect } from 'react';
+import { getPosts, deletePost } from '@/lib/api';
+import { useToast } from '@/hooks/use-toast';
+import { PortfolioItem } from '@/types';
+import PortfolioCard from '@/app/portfolio-list/components/portfoliocard';
+import Link from 'next/link';
+import { PlusCircle, RefreshCcw } from 'lucide-react';
+import { Button } from "@/components/ui/button";
+
+const PortfolioList: React.FC = () => {
+  const [portfolioItems, setPortfolioItems] = useState<PortfolioItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [deleting, setDeleting] = useState<string | null>(null);
+  const { toast } = useToast();
+
+  const fetchPortfolioItems = async () => {
+    try {
+      setLoading(true);
+      const data = await getPosts();
+      setPortfolioItems(data);
+      
+      if (data.length === 0) {
+        toast({
+          title: "Empty",
+          description: "No portfolio items found",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to fetch portfolio items",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchPortfolioItems();
+    return () => {
+      setLoading(false);
+    }
+  }, []);
+
+  const handleDelete = async (id: string) => {
+    try {
+      setDeleting(id);
+      await deletePost(id);
+      toast({
+        title: "Success",
+        description: "Portfolio item deleted successfully",
+      });
+      // Refresh the list after delete
+      fetchPortfolioItems();
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to delete portfolio item",
+      });
+    } finally {
+      setDeleting(null);
+    }
+  };
+
+  const refreshList = () => {
+    fetchPortfolioItems();
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h2 className="text-2xl font-heading font-medium">Portfolio Items</h2>
+        <div className="flex space-x-4">
+          <Button 
+            onClick={refreshList}
+            variant="outline"
+            className="text-sm flex items-center gap-1"
+            disabled={loading}
+          >
+            <RefreshCcw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
+            Refresh
+          </Button>
+          <Link href="/blogs/new">
+            <Button className="text-sm flex items-center gap-1">
+              <PlusCircle className="h-4 w-4" />
+              New Item
+            </Button>
+          </Link>
+        </div>
+      </div>
+
+      {loading ? (
+        <div className="flex justify-center py-12">
+          <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-raydawn-purple"></div>
+        </div>
+      ) : portfolioItems.length === 0 ? (
+        <div className="bg-transparent rounded-lg shadow-sm p-12 text-center">
+          <p className="text-gray-600">No portfolio items found. Add your first item!</p>
+          <Link href="/blogs/new">
+            <Button className="mt-4">
+              Create New Portfolio Item
+            </Button>
+          </Link>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {portfolioItems.map((item) => (
+            <div key={item.id} className="relative group">
+              <PortfolioCard item={item} onDelete={() => item.id && handleDelete(item.id)} isDeleting={deleting === item.id} />
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default PortfolioList;
