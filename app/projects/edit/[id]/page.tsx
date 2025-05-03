@@ -1,68 +1,60 @@
-import { Metadata } from 'next';
-import { notFound } from 'next/navigation';
+'use client'
+
+import { useParams } from 'next/navigation';
 import { BlogForm } from '@/components/blog/BlogForm';
-import { connectToDatabase } from '@/database';
-import Blog from '@/database/models/blogs';
+import { useEffect, useState } from 'react';
+import { getBlogPostAction } from '@/app/actions/blogActions';
 
-export const metadata: Metadata = {
-  title: 'Edit Blog Post',
-  description: 'Edit an existing blog post',
-};
+// Move getBlogPost to a separate server action file
+// You'll need to import that action here
 
-// This function generates the static params at build time
-export async function generateStaticParams() {
-  // Connect to database - in production, you might want to limit this
-  await connectToDatabase();
-  const blogs = await Blog.find({}).limit(20);
+export default function EditBlogPage() {
+  const params = useParams();
+  const id = params.id as string;
+  const [blog, setBlog] = useState<{
+    id: string;
+    title: string;
+    content: string;
+    image: string;
+    slug: string;
+    client: string;
+    video: string;
+    excerpt: string;
+    tags: string[];
+  } | null>(null);
+  const [loading, setLoading] = useState(true);
   
-  return blogs.map((blog) => ({
-    id: blog._id.toString(),
-  }));
-}
-
-// Get the blog post data from the database
-async function getBlogPost(id: string) {
-  try {
-    await connectToDatabase();
-    const blog = await Blog.findById(id);
-    if (!blog) return null;
+  useEffect(() => {
+    async function loadBlog() {
+      if (!id || typeof id !== 'string') {
+        // Handle invalid ID
+        return;
+      }
+      
+      try {
+        // Replace with your server action or API call
+        const blogData = await getBlogPostAction(id);
+        if (blogData) {
+          setBlog(blogData);
+        } else {
+          // Handle not found
+        }
+      } catch (error) {
+        console.error('Error loading blog:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
     
-    return {
-      id: blog._id.toString(),
-      title: blog.title,
-      content: blog.content,
-      image: blog.image,
-      slug: blog.slug,
-      client: blog.client || '',
-      video: blog.video || '',
-      excerpt: blog.excerpt || '',
-      tags: blog.tags || [],
-    };
-  } catch (error) {
-    console.error('Error fetching blog post:', error);
-    return null;
-  }
-}
-
-export default async function EditBlogPage({ 
-  params 
-}: { 
-  params: Promise<{ id: string }> 
-}) {
-  // Await the params object to get its properties
-  const resolvedParams = await params;
-  const id = resolvedParams.id;
+    loadBlog();
+  }, [id]);
   
-  // Validate that id exists and is a string
-  if (!id || typeof id !== 'string') {
-    notFound();
+  if (loading) {
+    return <div>Loading...</div>;
   }
   
-  const blog = await getBlogPost(id);
-  
-  // If blog post not found, show 404
   if (!blog) {
-    notFound();
+    return <div>Blog post not found</div>;
   }
   
   return (
