@@ -53,29 +53,28 @@ const UploadForm: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
     setIsSubmitting(true);
 
     try {
-      //let imageUrl = data.photoLink || '';
-
-      // If an image file is selected, upload it and get URL
-      // if (selectedImage) {
-      //   const uploadRes = await uploadImage(selectedImage); // should return { url }
-      //   imageUrl = uploadRes?.url || '';
-      // }
-
-      const payload = {
-        title: data.title,
-        content: data.description, // mapped from "description" to "content"
-        category: data.category,
-        client: data.client,
-        video: data.videoLink || '',
-        image: selectedImage,
-      };
+      // Create FormData object to handle file upload
+      const formData = new FormData();
+      
+      // Add text fields to FormData
+      formData.append('title', data.title);
+      formData.append('content', data.description); // mapped from "description" to "content"
+      formData.append('category', data.category);
+      formData.append('client', data.client);
+      if (data.videoLink) formData.append('video', data.videoLink);
+      
+      // Add image file if selected
+      if (selectedImage) {
+        formData.append('image', selectedImage);
+      } else if (data.photoLink) {
+        formData.append('photoLink', data.photoLink);
+      }
 
       const response = await fetch('/api/addproject', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
+        // Don't set Content-Type header when sending FormData
+        // The browser will automatically set it with the correct boundary
+        body: formData,
       });
 
       if (response.ok) {

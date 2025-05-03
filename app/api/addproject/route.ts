@@ -3,6 +3,15 @@ import Blog from '@/database/models/blogs';
 import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth/next";
 
+// Helper function to generate slug
+function generateSlug(title: string): string {
+    return title
+        .toLowerCase()
+        .replace(/[^\w\s-]/g, '') // Remove non-word chars
+        .replace(/[\s_-]+/g, '-')  // Replace spaces and underscores with hyphens
+        .replace(/^-+|-+$/g, '')   // Remove leading/trailing hyphens
+        .substring(0, 100);        // Limit length
+}
 
 export async function POST(req: Request) {
     try {
@@ -18,30 +27,58 @@ export async function POST(req: Request) {
             });
         }
         
-        // Handle form data or JSON
-        let data: Record<string, any> = {};
+        // Check if the request is multipart form data or JSON
         const contentType = req.headers.get('content-type') || '';
-         {
+        let data: Record<string, any> = {};
+        let imageBuffer: Buffer | null = null;
+        let imageType: string | null = null;
+        
+        if (contentType.includes('multipart/form-data')) {
+            // Handle form data with file upload
+            const formData = await req.formData();
+            
+            // Process regular form fields
+            for (const [key, value] of formData.entries()) {
+                if (key !== 'image') {
+                    data[key] = value;
+                }
+            }
+            
+            // Process image file
+            const imageFile = formData.get('image') as File | null;
+            if (imageFile && imageFile instanceof File) {
+                // Convert image file to buffer
+                const arrayBuffer = await imageFile.arrayBuffer();
+                imageBuffer = Buffer.from(arrayBuffer);
+                imageType = imageFile.type;
+            }
+        } else {
+            // Handle JSON data
             data = await req.json();
         }
         
-        const { title, content, image, video,client, slug, excerpt, tags } = data;
+        const { title, content, video, client, excerpt, tags, slug: providedSlug } = data;
 
-        // Create a valid ObjectId from the session user id
-        //const authorId = new mongoose.Types.ObjectId(session.user.id);
+        // Generate slug from title if not provided
+        const slug = providedSlug || generateSlug(title);
         
-        const newPost = new Blog({
+        const blogData: any = {
             title,
             content,
-            image,
             video,
             client,
             slug,
             excerpt,
             tags,
-            //author: authorId,
-        });
+        };
 
+        // Add image data if available
+        if (imageBuffer && imageType) {
+            blogData.image = imageBuffer;
+            blogData.imageType = imageType;
+        }
+        
+        const newPost = new Blog(blogData);
         const savedPost = await newPost.save();
 
         return new Response(JSON.stringify(savedPost), {
