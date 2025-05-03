@@ -44,14 +44,14 @@ async function getBlogPost(id: string) {
   }
 }
 
-
 export default async function EditBlogPage({ 
   params 
 }: { 
-  params: { id: string } 
+  params: Promise<{ id: string }> 
 }) {
-  // Make sure to await the params object
-  const id = params?.id;
+  // Await the params object to get its properties
+  const resolvedParams = await params;
+  const id = resolvedParams.id;
   
   // Validate that id exists and is a string
   if (!id || typeof id !== 'string') {
