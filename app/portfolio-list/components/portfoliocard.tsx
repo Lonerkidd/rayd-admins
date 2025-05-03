@@ -33,7 +33,7 @@ const PortfolioCard: React.FC<PortfolioCardProps> = ({ item, onDelete, isDeletin
     >
       <div className="h-40 bg-gray-200 relative">
         <Image
-          src={item.image || '/placeholder.svg'} 
+          src={`/api/image/${item._id}`} 
           alt={item.title} 
           width={500}
           height={300}
