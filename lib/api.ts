@@ -9,7 +9,7 @@ export async function uploadImage(file: File): Promise<{ url: string }> {
       formData.append('file', file);
       formData.append('type', 'portfolio'); // Optional: to categorize uploads
   
-      const response = await fetch('/api/upload', {
+      const response = await fetch('/api/uploadproject', {
         method: 'POST',
         body: formData,
       });
@@ -30,7 +30,7 @@ export async function uploadImage(file: File): Promise<{ url: string }> {
   
   export async function addPost(portfolioItem: PortfolioItem): Promise<PortfolioItem> {
     try {
-      const response = await fetch('/api/portfolio', {
+      const response = await fetch('/api/addproject', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -72,57 +72,49 @@ export async function getPosts(): Promise<PortfolioItem[]> {
   }
 }
 
-// Get a single post by ID
-export async function getPostById(id: string): Promise<PortfolioItem> {
-  try {
-    const response = await fetch(`/api/portfolio/${id}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+// // Get a single post by ID
+// export async function getPostById(id: string): Promise<PortfolioItem> {
+//   try {
+//     const response = await fetch(`/api/portfolio/${id}`, {
+//       method: 'GET',
+//       headers: {
+//         'Content-Type': 'application/json',
+//       },
+//     });
 
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.error || 'Failed to fetch post');
-    }
+//     if (!response.ok) {
+//       const error = await response.json();
+//       throw new Error(error.error || 'Failed to fetch post');
+//     }
 
-    return response.json();
-  } catch (error) {
-    console.error('Error fetching post:', error);
-    throw error;
-  }
-}
+//     return response.json();
+//   } catch (error) {
+//     console.error('Error fetching post:', error);
+//     throw error;
+//   }
+// }
 
-// Create a new post with FormData (for file uploads)
-export async function createPost(formData: FormData): Promise<PortfolioItem> {
-  try {
-    const response = await axios.post('/api/portfolio', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
+// // Create a new post with FormData (for file uploads)
+// export async function createPost(formData: FormData): Promise<PortfolioItem> {
+//   try {
+//     const response = await axios.post('/api/portfolio', formData, {
+//       headers: {
+//         'Content-Type': 'multipart/form-data',
+//       },
+//     });
     
-    return response.data;
-  } catch (error) {
-    console.error('Error creating post:', error);
-    throw error;
-  }
-}
+//     return response.data;
+//   } catch (error) {
+//     console.error('Error creating post:', error);
+//     throw error;
+//   }
+// }
 
 // Update an existing post
 export async function updatePost(id: string, data: FormData | Partial<PortfolioItem>): Promise<PortfolioItem> {
   try {
     let response;
-    
-    // Check if we're sending FormData or JSON
-    if (data instanceof FormData) {
-      response = await axios.put(`/api/portfolio/${id}`, data, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-    } else {
+     {
       response = await axios.put(`/api/updatePost/${id}`, data, {
         headers: {
           'Content-Type': 'application/json',

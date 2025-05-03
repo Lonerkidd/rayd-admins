@@ -6,11 +6,11 @@ import { useToast } from '@/hooks/use-toast';
 import ImageUploadSection from './ImageUploadSection';
 import FormFields from './FormFields';
 import { formSchema } from './types';
-import axios from 'axios';
 import { Check } from 'lucide-react';
+import { uploadImage } from '@/lib/api'; // Make sure this is a function that uploads the image and returns { url }
 
 const categories = [
-  'infographic', 'branding', 'illustration', 
+  'infographic', 'branding', 'illustration',
   'web design', 'print', 'video', 'animation'
 ];
 
@@ -50,73 +50,56 @@ const UploadForm: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
   };
 
   const onSubmit = async (data: any) => {
-    console.log('Form data:', data);
-    // Check if an image is selected or a photo link is provided
     setIsSubmitting(true);
-    // if (!selectedImage && !data.photoLink) {
-    //   toast({
-    //     title: "Image required",
-    //     description: "Please upload an image or provide a photo link",
-    //   });
-    //   return;
-    // }
 
-    
     try {
-      // Create FormData for submission
-      const formData = new FormData();
-      
-      // Add all form fields to FormData
-      formData.append('title', data.title);
-      formData.append('content', data.description); // Map description to content
-      formData.append('category', data.category);
-      formData.append('client', data.client);
-      
-      // Add optional fields if they exist
-      if (data.videoLink) formData.append('videoLink', data.videoLink);
-      
-      // Handle image differently: either upload file or use photoLink
+      let imageUrl = data.photoLink || '';
+
+      // If an image file is selected, upload it and get URL
       if (selectedImage) {
-        formData.append('image', selectedImage);
-        // Set a flag to indicate we're uploading a file
-        formData.append('imageType', 'file');
-      } else if (data.photoLink) {
-        formData.append('photoLink', data.photoLink);
-        // Set a flag to indicate we're using a URL
-        formData.append('imageType', 'url');
+        const uploadRes = await uploadImage(selectedImage); // should return { url }
+        imageUrl = uploadRes?.url || '';
       }
-      
-      console.log('Submitting form data:', Object.fromEntries(formData));
-      
-      // Submit directly to the API endpoint
-      const response = await axios.post('/api/addproject', formData);
-      
-      console.log('Server response:', response);
-      
-      if (response.status === 200) {
+
+      const payload = {
+        title: data.title,
+        content: data.description, // mapped from "description" to "content"
+        category: data.category,
+        client: data.client,
+        video: data.videoLink || '',
+        image: imageUrl,
+      };
+
+      const response = await fetch('/api/addproject', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (response.ok) {
         toast({
           title: "Success!",
           description: "Portfolio item has been added successfully",
         });
-        
-        // Reset form
+
         reset();
         setSelectedImage(null);
         setImagePreview(null);
-        
-        // Trigger callback
         if (onSuccess) onSuccess();
       } else {
+        const err = await response.json();
         toast({
           title: "Error!",
-          description: "Portfolio item has not been added",
+          description: err.message || "Portfolio item was not added",
         });
       }
     } catch (error: any) {
       console.error('Form submission error:', error);
       toast({
         title: "Error",
-        description: error.response?.data?.message || error.message || "Failed to upload portfolio item",
+        description: error.message || "Failed to upload portfolio item",
       });
     } finally {
       setIsSubmitting(false);
@@ -126,42 +109,42 @@ const UploadForm: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
   return (
     <div className="bg-gray-900 rounded-lg shadow-md border border-[#0F9B99]/70 p-4">
       <h2 className="text-2xl font-heading font-medium mb-4 text-white">Upload New Portfolio Item</h2>
-      
+
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-        <FormFields 
-          register={register} 
+        <FormFields
+          register={register}
           errors={errors}
           categories={categories}
         />
-        
-        <ImageUploadSection 
+
+        <ImageUploadSection
           selectedImage={selectedImage}
           imagePreview={imagePreview}
           onImageChange={handleImageChange}
           onRemoveImage={removeImage}
         />
-        
+
         <div>
           <button
-                type="submit"
-                disabled={isSubmitting}
-                className={`flex items-center justify-center w-full md:w-auto rounded-md bg-raydawn-purple px-6 py-3 text-sm font-medium text-white shadow-sm hover:bg-raydawn-dark-purple focus:outline-none focus:ring-2 focus:ring-raydawn-purple focus:ring-offset-2 ${isSubmitting ? 'opacity-70 cursor-not-allowed' : 'cursor-pointer'}`}
-              >
-                {isSubmitting ? (
-                  <>
-                    <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    Uploading...
-                  </>
-                ) : (
-                  <>
-                    <Check className="mr-1 h-4 w-4" />
-                    Upload Portfolio Item
-                  </>
-                )}
-              </button>
+            type="submit"
+            disabled={isSubmitting}
+            className={`flex items-center justify-center w-full md:w-auto rounded-md bg-raydawn-purple px-6 py-3 text-sm font-medium text-white shadow-sm hover:bg-raydawn-dark-purple focus:outline-none focus:ring-2 focus:ring-raydawn-purple focus:ring-offset-2 ${isSubmitting ? 'opacity-70 cursor-not-allowed' : 'cursor-pointer'}`}
+          >
+            {isSubmitting ? (
+              <>
+                <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Uploading...
+              </>
+            ) : (
+              <>
+                <Check className="mr-1 h-4 w-4 border-2 rounded" />
+                Upload Portfolio Item
+              </>
+            )}
+          </button>
         </div>
       </form>
     </div>

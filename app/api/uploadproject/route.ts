@@ -10,15 +10,15 @@ const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
 
 export async function POST(req: Request) {
   try {
-    // Get current user from session for auth check
-    const session = await getServerSession(authOptions);
+    // // Get current user from session for auth check
+    // const session = await getServerSession(authOptions);
     
-    if (!session || !session.user || session.user.role !== 'admin') {
-      return new Response(JSON.stringify({ error: 'Unauthorized. Admin access required.' }), {
-        status: 401,
-        headers: { 'Content-Type': 'application/json' },
-      });
-    }
+    // if (!session || !session.user || session.user.role !== 'admin') {
+    //   return new Response(JSON.stringify({ error: 'Unauthorized. Admin access required.' }), {
+    //     status: 401,
+    //     headers: { 'Content-Type': 'application/json' },
+    //   });
+    // }
     
     // Parse form data
     const formData = await req.formData();

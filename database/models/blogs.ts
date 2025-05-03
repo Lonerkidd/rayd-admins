@@ -2,16 +2,12 @@ import mongoose, { Schema } from 'mongoose';
 
 // Define the Blog interface
 interface IBlog {
-    _id: string; // Optional ID for the blog post
+    _id: string; 
     title: string;
     content: string;
     image: string;
-    slug: string;
-    excerpt: string;
     client:string;
-    //author: mongoose.Types.ObjectId | string; // Add proper typing for author
     video?: string;
-    tags?: string[];
     createdAt: Date;
     updatedAt: Date;
 }
@@ -44,10 +40,6 @@ const blogSchema = new Schema<IBlog>({
      type:String,
      required:true,
     },
-    tags: [{
-        type: String,
-        required: false,
-    }],
     createdAt: {
         type: Date,
         default: () => Date.now(),

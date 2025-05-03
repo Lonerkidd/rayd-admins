@@ -21,25 +21,7 @@ export async function POST(req: Request) {
         // Handle form data or JSON
         let data: Record<string, any> = {};
         const contentType = req.headers.get('content-type') || '';
-        
-        if (contentType.includes('multipart/form-data')) {
-            const formData = await req.formData();
-            
-            // Convert FormData to object with proper type checking
-            for (const [key, value] of formData.entries()) {
-                data[key] = value;
-            }
-            
-            // Parse tags from JSON string if present
-            if (data.tags && typeof data.tags === 'string') {
-                try {
-                    data.tags = JSON.parse(data.tags);
-                } catch {
-                    // If parsing fails, split by comma as fallback
-                    data.tags = (data.tags as string).split(',').map((tag: string) => tag.trim());
-                }
-            }
-        } else {
+         {
             data = await req.json();
         }
         

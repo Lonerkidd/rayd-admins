@@ -9,13 +9,9 @@ interface IBlog {
     title: string;
     content: string;
     image: string;
-    slug: string;
-    excerpt: string;
     video?: string;
-    tags?: string[];
     createdAt: Date;
     updatedAt: Date;
-    author?: string;
   }
   
 
@@ -41,19 +37,23 @@ export async function DELETE(request: Request) {
         const postId = url.pathname.split("/").pop();
 
         // Check if the blog exists before attempting to delete
-        const existingBlog = await Blog.findById(postId).lean() as IBlog;
+        const existingBlog = await Blog.findById(postId).lean();
+        if (existingBlog) {
+            const blog: IBlog = {
+                title: existingBlog.title,
+                content: existingBlog.content,
+                image: existingBlog.image,
+                video: existingBlog.video,
+                createdAt: existingBlog.createdAt,
+                updatedAt: existingBlog.updatedAt,
+
+            };
+            return blog;
+        }
         if (!existingBlog) {
             return NextResponse.json(
                 { message: "Post not found" },
                 { status: 404 }
-            );
-        }
-        
-        // Optional: Check if user is the author or has admin privileges
-        if (existingBlog.author?.toString() !== session.user.id && session.user.role !== 'admin') {
-            return NextResponse.json(
-                { message: "Not authorized to delete this post" },
-                { status: 403 }
             );
         }
 
