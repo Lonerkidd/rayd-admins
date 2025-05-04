@@ -5,7 +5,7 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
   try {
     await connectToDatabase();
 
-    const id = params.id;
+    const {id} = params;
 
     // Find the blog post by ID
     const blogPost = await Blog.findById(id).select("image imageType");

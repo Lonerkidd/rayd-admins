@@ -5,14 +5,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 
 
-interface IBlog {
-    title: string;
-    content: string;
-    image: string;
-    video?: string;
-    createdAt: Date;
-    updatedAt: Date;
-  }
+// 
   
 
 // Create handler for deleting the posts
@@ -38,18 +31,9 @@ export async function DELETE(request: Request) {
 
         // Check if the blog exists before attempting to delete
         const existingBlog = await Blog.findById(postId).lean();
-        if (existingBlog) {
-            const blog: IBlog = {
-                title: existingBlog.title,
-                content: existingBlog.content,
-                image: existingBlog.image,
-                video: existingBlog.video,
-                createdAt: existingBlog.createdAt,
-                updatedAt: existingBlog.updatedAt,
-
-            };
-            return blog;
-        }
+        
+        
+        // If blog post not found, return 404
         if (!existingBlog) {
             return NextResponse.json(
                 { message: "Post not found" },

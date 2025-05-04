@@ -38,6 +38,8 @@ export interface BlogFormValues {
   slug: string;
   excerpt: string;
   tags: string;
+  category: string;
+  client: string;
   image?: File | string | null;
   video?: string;
   author?: string;

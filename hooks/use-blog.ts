@@ -8,7 +8,9 @@ const defaultFormValues: BlogFormValues = {
   content: '',
   slug: '',
   excerpt: '',
+  category: '',
   tags: '',
+  client: '',
   image: null,
   video: '',
 };
@@ -21,9 +23,7 @@ export default function useBlogForm(
     ...defaultFormValues,
     ...initialValues,
   });
-  const [imagePreview, setImagePreview] = useState<string | null>(
-    typeof initialValues.image === 'string' ? initialValues.image : null
-  );
+  const [imagePreview, setImagePreview] = useState<string | null>(`/api/image/${initialValues.id}`);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
