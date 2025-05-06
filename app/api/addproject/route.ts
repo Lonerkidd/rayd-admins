@@ -1,7 +1,6 @@
 import {connectToDatabase} from "@/database";
 import Blog from '@/database/models/blogs';
-import { authOptions } from "@/lib/auth";
-import { getServerSession } from "next-auth/next";
+import { auth } from "@clerk/nextjs";
 
 // Helper function to generate slug
 function generateSlug(title: string): string {
@@ -17,10 +16,10 @@ export async function POST(req: Request) {
     try {
         await connectToDatabase();
         
-        // Get current user from session
-        const session = await getServerSession(authOptions);
+        // Get current user from Clerk
+        const { userId } = auth();
         
-        if (!session || !session.user || !session.user.id) {
+        if (!userId) {
             return new Response(JSON.stringify({ error: 'Not authenticated or missing user ID' }), {
                 status: 401,
                 headers: { 'Content-Type': 'application/json' },
@@ -70,6 +69,7 @@ export async function POST(req: Request) {
             slug,
             excerpt,
             tags,
+            userId, // Save the Clerk userId with the blog post
         };
 
         // Add image data if available

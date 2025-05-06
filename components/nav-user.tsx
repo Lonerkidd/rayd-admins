@@ -2,11 +2,9 @@
 
 import {
   BadgeCheck,
-  Bell,
   ChevronsUpDown,
-  CreditCard,
   LogOut,
-  Sparkles,
+
 } from "lucide-react"
 
 import {
@@ -29,23 +27,17 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
-import { useAuth } from "@/context/Authcontext"
+import { useUser } from "@clerk/nextjs";
+import { useAuth } from "@clerk/nextjs";
 
-interface NavUserProps {
-  user: {
-    name: string;
-    email: string;
-    avatar: string;
-  };
-}
+export function NavUser() {
 
-export function NavUser({ user }: NavUserProps) {
-
-  const { user: authUser, logout } = useAuth()
+  const { signOut } = useAuth()
+  const { user } = useUser();
   const { state } = useSidebar()
   const isSidebarCollapsed = state === "collapsed"
 
-  if (!authUser) return null
+  if (!user) return null
 
   return (
     <SidebarMenu>
@@ -58,16 +50,16 @@ export function NavUser({ user }: NavUserProps) {
             >
               {/* Use a gradient background for avatar if image fails */}
               <Avatar className={`${isSidebarCollapsed ? "w-10 h-10" : "w-8 h-8"} rounded-lg bg-gradient-to-br from-teal-500 to-teal-700`}>
-                <AvatarImage src={user.avatar} alt={user.name} />
+                <AvatarImage src={user.imageUrl} alt={user.firstName!} />
                 <AvatarFallback className="rounded-lg text-white">
-                  {user.name.substring(0, 2).toUpperCase()}
+                  {user.firstName?.substring(0, 2).toUpperCase()}
                 </AvatarFallback>
               </Avatar>
               
               {!isSidebarCollapsed && (
                 <div className="grid flex-1 text-left text-sm leading-tight ml-3">
-                  <span className="truncate font-medium text-white">{user.name}</span>
-                  <span className="truncate text-xs text-gray-400">{user.email}</span>
+                  <span className="truncate font-medium text-white">{user.firstName}</span>
+                  <span className="truncate text-xs text-gray-400">{user.primaryEmailAddress?.emailAddress}</span>
                 </div>
               )}
               
@@ -86,14 +78,14 @@ export function NavUser({ user }: NavUserProps) {
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-10 w-10 rounded-lg bg-gradient-to-br from-orange-500 to-teal-500">
-                  <AvatarImage src={user.avatar} alt={user.name} />
+                  <AvatarImage src={user.imageUrl} alt={user.firstName!} />
                   <AvatarFallback className="rounded-lg text-white">
-                    {user.name.substring(0, 2).toUpperCase()}
+                    {user.firstName?.substring(0, 2).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium text-white">{user.name}</span>
-                  <span className="truncate text-xs text-gray-400">{user.email}</span>
+                  <span className="truncate font-medium text-white">{user.firstName}</span>
+                  <span className="truncate text-xs text-gray-400">{user.primaryEmailAddress?.emailAddress}</span>
                 </div>
               </div>
             </DropdownMenuLabel>
@@ -107,7 +99,7 @@ export function NavUser({ user }: NavUserProps) {
             
             <DropdownMenuSeparator className="bg-gray-800" />
             
-            <DropdownMenuItem onClick={logout} className="text-gray-300 focus:text-white focus:bg-gray-800">
+            <DropdownMenuItem onClick={()=>signOut()} className="text-gray-300 focus:text-white focus:bg-gray-800">
               <LogOut className="text-orange-500" />
               Log out
             </DropdownMenuItem>

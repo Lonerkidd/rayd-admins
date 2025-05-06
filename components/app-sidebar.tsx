@@ -6,7 +6,6 @@ import {
   FolderPlus,
   Home,
   TableCellsMerge,
-  ChevronsUpDown,
 } from "lucide-react"
 import { usePathname } from "next/navigation"; // Import usePathname for dynamic URL detection
 import Link from "next/link";
@@ -27,7 +26,6 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
-import { useAuth } from "@/context/Authcontext"
 
 // This is sample data.
 const data = {
@@ -63,7 +61,6 @@ const items = [
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { state } = useSidebar();
   const pathname = usePathname(); // Get the current URL path
-  const { user } = useAuth();
 
   // Helper to determine if an item is active
   const isItemActive = (url: string) => pathname === url;
@@ -119,7 +116,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarGroup> 
       </SidebarContent>
       <SidebarFooter className="border-t border-gray-800">
-        <NavUser user={data.user} />
+        <NavUser/>
       </SidebarFooter>
       <SidebarRail className="hover:after:bg-blue-500" />
       
