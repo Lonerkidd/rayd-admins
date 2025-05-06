@@ -26,7 +26,7 @@ export function BlogForm({ defaultValues, mode }: BlogFormProps) {
   } = useBlogForm(defaultValues, mode);
 
   return (
-    <Card className="p-4 md:p-6 border border-gray-200 shadow-lg bg-black backdrop-blur-sm">
+    <Card className="p-4 md:p-6 border border-gray-200 shadow-lg bg-black backdrop-blur-sm text-white">
       <form onSubmit={handleSubmit} className="space-y-6">
         {error && (
           <div className="bg-red-50 text-red-600 p-4 rounded-lg flex items-start gap-3 mb-4 border border-red-200">
@@ -39,7 +39,7 @@ export function BlogForm({ defaultValues, mode }: BlogFormProps) {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="title" className="text-base font-medium">Title *</Label>
+              <Label htmlFor="title" className=" text-white font-medium">Title *</Label>
               <Input
                 id="title"
                 name="title"
@@ -52,7 +52,7 @@ export function BlogForm({ defaultValues, mode }: BlogFormProps) {
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="content" className="text-base font-medium">Content *</Label>
+              <Label htmlFor="content" className="text-base text-white font-medium">Content *</Label>
               <Textarea
                 id="content"
                 name="content"
@@ -66,7 +66,7 @@ export function BlogForm({ defaultValues, mode }: BlogFormProps) {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="excerpt" className="text-base font-medium">Excerpt</Label>
+              <Label htmlFor="excerpt" className="text-base text-white font-medium">Excerpt</Label>
               <Textarea
                 id="excerpt"
                 name="excerpt"
@@ -84,7 +84,7 @@ export function BlogForm({ defaultValues, mode }: BlogFormProps) {
           {/* Sidebar Settings */}
           <div className="lg:col-span-1 space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="image" className="text-base font-medium">Featured Image</Label>
+              <Label htmlFor="image" className="text-base text-white font-medium">Featured Image</Label>
               <div className="mt-2 space-y-4">
                 {imagePreview ? (
                   <div className="relative w-full aspect-video rounded-md overflow-hidden border border-gray-200">
@@ -151,7 +151,7 @@ export function BlogForm({ defaultValues, mode }: BlogFormProps) {
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="category" className="text-base font-medium">Category</Label>
+              <Label htmlFor="category" className=" text-white font-medium">Category</Label>
               <select
                 id="category"
                 name="category"
@@ -169,7 +169,7 @@ export function BlogForm({ defaultValues, mode }: BlogFormProps) {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="client" className="text-base font-medium">Client</Label>
+              <Label htmlFor="client" className=" text-white font-medium">Client</Label>
               <Input
                 id="client"
                 name="client"
@@ -180,7 +180,7 @@ export function BlogForm({ defaultValues, mode }: BlogFormProps) {
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="tags" className="text-base font-medium">Tags</Label>
+              <Label htmlFor="tags" className=" text-white font-medium">Tags</Label>
               <Input
                 id="tags"
                 name="tags"
@@ -192,7 +192,7 @@ export function BlogForm({ defaultValues, mode }: BlogFormProps) {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="slug" className="text-base font-medium">URL Slug</Label>
+              <Label htmlFor="slug" className=" text-white font-medium">URL Slug</Label>
               <Input
                 id="slug"
                 name="slug"
@@ -207,7 +207,7 @@ export function BlogForm({ defaultValues, mode }: BlogFormProps) {
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="video" className="text-base font-medium">Video URL</Label>
+              <Label htmlFor="video" className=" text-white font-medium">Video URL</Label>
               <Input
                 id="video"
                 name="video"

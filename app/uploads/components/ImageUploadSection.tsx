@@ -50,7 +50,9 @@ const ImageUploadSection: React.FC<ImageUploadSectionProps> = ({
             >
               <X className="h-4 w-4 text-white" />
             </button>
-            <img 
+            <Image 
+              width={200}
+              height={200}
               src={imagePreview} 
               alt="Preview" 
               className="max-h-[200px] mx-auto rounded object-contain"

@@ -128,7 +128,7 @@ const UploadForm: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
           <ShinyButton
             type="submit"
             disabled={isSubmitting}
-            className={`flex items-center justify-center w-full rounded-md bg-teal px-6 py-3 text-sm font-medium text-white shadow-sm ${isSubmitting ? 'opacity-70 cursor-not-allowed' : 'cursor-pointer'}`}
+            className={`flex items-center justify-center rounded-md bg-white px-6 py-3 text-sm font-medium text-white shadow-sm ${isSubmitting ? 'opacity-70 cursor-not-allowed' : 'cursor-pointer'}`}
           >
             {isSubmitting ? (
               <>

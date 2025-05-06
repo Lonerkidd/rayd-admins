@@ -1,6 +1,6 @@
 'use client'
 // This is the route for the upload page in the portfolio items section of the dashboard
-import UploadForm from "@/app/upload/components/UploadForm"
+import UploadForm from "@/app/uploads/components/UploadForm"
 import BreadcrumbBar from "@/components/breadcrumber"
 import { SidebarProvider } from "@/components/ui/sidebar"
 import { SidebarInset } from "@/components/ui/sidebar"
