@@ -1,15 +1,15 @@
 import { connectToDatabase } from '@/database';
 import Blog from '@/database/models/blogs';
-import { auth } from '@clerk/nextjs';
+import { NextRequest } from 'next/server';
 
 export async function GET(
-  _request: Request,
-  { params }: { params: { id: string } }
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await connectToDatabase();
 
-    const { id } = params;
+    const { id } = await params;
 
     const blogPost = await Blog.findById(id).select("image imageType");
     if (!blogPost || !blogPost.image) {

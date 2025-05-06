@@ -1,8 +1,6 @@
 import { connectToDatabase } from "@/database";
 import Blog from '@/database/models/blogs';
 import { NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
 
 
 // 
@@ -11,17 +9,6 @@ import { authOptions } from "@/lib/auth";
 // Create handler for deleting the posts
 export async function DELETE(request: Request) {
     try{
-        // Verify authentication
-        const session = await getServerSession(authOptions);
-        
-        // Check authentication
-        if (!session?.user) {
-          return NextResponse.json(
-            { error: 'Unauthorized' },
-            { status: 401 }
-          );
-        }
-
         // Connect to database
         await connectToDatabase();
 

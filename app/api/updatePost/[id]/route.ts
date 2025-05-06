@@ -1,8 +1,6 @@
 import { connectToDatabase } from "@/database";
 import Blog from '@/database/models/blogs';
 import { NextResponse } from "next/server";
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/lib/auth";
 import { z } from "zod";
 
 // Validation schema for blog updates
@@ -11,6 +9,7 @@ const updateBlogSchema = z.object({
   content: z.string().min(10, { message: "Content must be at least 10 characters long" }).optional(),
   image: z.string().optional(),
   slug: z.string().optional(),
+  client : z.string().optional(),
   excerpt: z.string().optional(),
   tags: z.array(z.string()).optional(),
   video: z.string().optional(),
@@ -19,16 +18,6 @@ const updateBlogSchema = z.object({
 // Route to update a post
 export async function PUT(req: Request) {
     try {
-        // Verify authentication
-        const session = await getServerSession(authOptions);
-        
-        // Check authentication
-        if (!session?.user) {
-          return NextResponse.json(
-            { error: 'Unauthorized' },
-            { status: 401 }
-          );
-        }
 
         // Connect to database
         await connectToDatabase();

@@ -15,7 +15,7 @@ const PortfolioList: React.FC = () => {
   const [deleting, setDeleting] = useState<string | null>(null);
   const { toast } = useToast();
 
-  const fetchPortfolioItems = async () => {
+  const fetchPortfolioItems = React.useCallback(async () => {
     try {
       setLoading(true);
       const data = await getPosts();
@@ -36,14 +36,14 @@ const PortfolioList: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [toast]);
 
   useEffect(() => {
     fetchPortfolioItems();
     return () => {
       setLoading(false);
     };
-  }, []);
+  }, [fetchPortfolioItems]);
 
   const handleDelete = async (id: string) => {
     try {

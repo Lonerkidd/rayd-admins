@@ -174,7 +174,7 @@ export function BlogForm({ defaultValues, mode }: BlogFormProps) {
                 id="client"
                 name="client"
                 value={formValues.client || ''}
-                onChange={handleChange}
+                onChange={()=>handleChange}
                 placeholder="Enter client name"
               />
             </div>
@@ -185,7 +185,7 @@ export function BlogForm({ defaultValues, mode }: BlogFormProps) {
                 id="tags"
                 name="tags"
                 value={formValues.tags}
-                onChange={handleChange}
+                onChange={()=>handleChange}
                 placeholder="design, marketing, branding"
               />
               <p className="text-xs text-muted-foreground">Separate with commas</p>

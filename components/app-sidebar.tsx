@@ -43,7 +43,7 @@ const data = {
 const items = [
   {
     title: "Dashboard",
-    url: "/dashboard",
+    url: "/",
     icon: Home,
   },
   {
