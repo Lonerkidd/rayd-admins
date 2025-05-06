@@ -56,10 +56,10 @@ export async function POST(req: Request) {
             data = await req.json();
         }
         
-        const { title, content, video, client, excerpt, tags, slug: providedSlug } = data;
+        const { title, content, video, client, excerpt, tags } = data;
 
-        // Generate slug from title if not provided
-        const slug = providedSlug || generateSlug(title);
+        // Generate slug from title
+        const slug = generateSlug(title);
         
         const blogData: any = {
             title,
