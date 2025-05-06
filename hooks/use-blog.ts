@@ -67,6 +67,8 @@ export default function useBlogForm(
       // Add all text fields
       formData.append('title', formValues.title);
       formData.append('content', formValues.content);
+      formData.append('category', formValues.category || ''); 
+      formData.append('client', formValues.client || ''); 
       if (formValues.slug) formData.append('slug', formValues.slug);
       if (formValues.excerpt) formData.append('excerpt', formValues.excerpt);
       if (formValues.video) formData.append('video', formValues.video);
@@ -107,7 +109,7 @@ export default function useBlogForm(
       }
 
       // Redirect after successful operation
-      router.push('/blogs');
+      router.push('/');
       router.refresh();
     } catch (err: any) {
       setError(err.message || 'An unexpected error occurred');
