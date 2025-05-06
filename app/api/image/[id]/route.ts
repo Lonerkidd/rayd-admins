@@ -1,9 +1,9 @@
 import { connectToDatabase } from '@/database';
 import Blog from '@/database/models/blogs';
-import { auth } from '@clerk/nextjs';
+import { NextRequest } from 'next/server';
 
 export async function GET(
-  _request: Request,
+  request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {

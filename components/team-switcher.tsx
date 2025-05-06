@@ -9,6 +9,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
+import Image from "next/image"
 
 export function TeamSwitcher({
   teams,
@@ -42,12 +43,12 @@ export function TeamSwitcher({
               <div className="absolute inset-0 bg-black opacity-20"></div>
               
               {/* Logo image */}
-              <img
+              <Image
+                width={isSidebarCollapsed ? 40 : 48}
+                height={isSidebarCollapsed ? 40 : 48}
                 src={activeTeam.logo} 
                 alt={`${activeTeam.name} logo`}
-                className={`z-10 ${
-                  isSidebarCollapsed ? "w-10 h-10" : "w-12 h-12"
-                }`}
+                className='z-10'
               />
             </div>
           </div>
