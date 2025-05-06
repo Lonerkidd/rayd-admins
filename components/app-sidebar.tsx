@@ -43,12 +43,12 @@ const data = {
 const items = [
   {
     title: "Dashboard",
-    url: "/dashboard",
+    url: "/",
     icon: Home,
   },
   {
     title: "Upload Project",
-    url: "/upload",
+    url: "/uploads",
     icon: FolderPlus,
   },
   {
