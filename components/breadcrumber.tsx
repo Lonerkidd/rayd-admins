@@ -24,15 +24,15 @@ export default function BreadcrumbBar() {
     <div className="flex items-center gap-2 ml-3 px-2">
       <Breadcrumb>
         <BreadcrumbList>
-          <BreadcrumbItem className="hidden text-3xl text-white font-bold md:block">
+          <BreadcrumbItem className="hidden text-2xl text-white font-medium md:block">
             <BreadcrumbLink href="/dashboard">DashBoard</BreadcrumbLink>
           </BreadcrumbItem>
           {segments.map((seg, i) => (
             <React.Fragment key={i}>
               <BreadcrumbSeparator />
-              <BreadcrumbItem className= "text-3xl text-white font-bold">
+              <BreadcrumbItem className= "text-2xl text-white font-medium">
                 {i === segments.length - 1 ? (
-                  <BreadcrumbPage className="capitalize text-3xl text-white font-bold">{seg}</BreadcrumbPage>
+                  <BreadcrumbPage className="capitalize text-2xl text-white font-medium">{seg}</BreadcrumbPage>
                 ) : (
                   <BreadcrumbLink href={`/${segments.slice(0, i + 1).join("/")}`} className="capitalize text-3xl text-white font-bold">
                     {seg}

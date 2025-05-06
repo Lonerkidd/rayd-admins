@@ -48,7 +48,7 @@ const items = [
   },
   {
     title: "Upload Project",
-    url: "/upload",
+    url: "/uploads",
     icon: FolderPlus,
   },
   {

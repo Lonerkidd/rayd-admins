@@ -8,7 +8,7 @@ export default function SidebarLayout({ children }: { children: React.ReactNode 
   const pathname = usePathname();
 
   // Check if the current route is `/login`
-  const showSidebar = pathname !== '/login';
+  const showSidebar = pathname !== '/login/[[...rest]]';
 
   return (
     <div className="flex min-h-screen">

@@ -40,7 +40,7 @@ const PortfolioCard: React.FC<PortfolioCardProps> = ({ item, onDelete, isDeletin
 
 
   return (
-    <Card className= "bg-black border-grey-400" onClick={() => router.push(`/projects/${item._id}`)}>
+    <Card className= "bg-black border-grey-400">
       <CardHeader>
           <Image
             src={`/api/image/${item._id}`} 

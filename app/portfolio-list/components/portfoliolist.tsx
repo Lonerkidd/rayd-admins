@@ -84,7 +84,7 @@ const PortfolioList: React.FC = () => {
             <RefreshCcw className={`h-4 text-white w-4 ${loading ? 'animate-spin' : ''}`} />
             Refresh
           </Button>
-          <Link href="/upload">
+          <Link href="/uploads">
             <Button className="text-sm flex items-center mr-4 gap-1">
               <PlusCircle className="h-4  w-4" />
               New Item
@@ -100,7 +100,7 @@ const PortfolioList: React.FC = () => {
       ) : portfolioItems.length === 0 ? (
         <div className="bg-transparent rounded-lg shadow-sm p-12 text-center">
           <p className="text-white">No portfolio items found. Add your first item!</p>
-          <Link href="/upload">
+          <Link href="/uploads">
             <Button className="mt-4">
               Create New Portfolio Item
             </Button>

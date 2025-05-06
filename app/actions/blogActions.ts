@@ -4,39 +4,23 @@ import { connectToDatabase } from '@/database';
 import Blog from '@/database/models/blogs';
 
 export async function getBlogPostAction(id: string) {
-  try {
-    await connectToDatabase();
-    const blog = await Blog.findById(id);
-    if (!blog) return null;
-    
-    // If blog has a Buffer image, convert it to a base64 string
-    if (blog && blog.image && blog.image instanceof Buffer) {
-      return {
-        id: blog._id.toString(),
-        title: blog.title,
-        content: blog.content,
-        image: blog.image.toString('base64'),
-        client: blog.client || '',
-        video: blog.video || '',
-        slug: blog.slug || '',
-        excerpt: blog.excerpt || '',
-        tags: blog.tags || [], // Add tags with default empty array
-      };
-    }
-    
-    return {
-      id: blog._id.toString(),
-      title: blog.title,
-      content: blog.content,
-      image: blog.image,
-      client: blog.client || '',
-      video: blog.video || '',
-      slug: blog.slug || '',
-      excerpt: blog.excerpt || '',
-      tags: blog.tags || [], // Add tags with default empty array
-    };
-  } catch (error) {
-    console.error('Error fetching blog post:', error);
-    return null;
+  const response = await fetch(`/api/blog/${id}`);
+  if (!response.ok) {
+    throw new Error('Failed to fetch blog post');
   }
+  return response.json();
+}
+
+export async function updateBlogPostAction(id: string, updatedData: any) {
+  const response = await fetch(`/api/blog/${id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(updatedData),
+  });
+  if (!response.ok) {
+    throw new Error('Failed to update blog post');
+  }
+  return response.json();
 }

@@ -16,7 +16,7 @@ export default function DashboardPage() {
       <header className="w-full bg-black p-4">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-0 p-1">
         <div>
-        <TypingAnimation className="text-4xl font-heading font-bold text-white">Welcome to RayDawn Admin</TypingAnimation>
+        <TypingAnimation className="text-3xl font-heading font-medium text-white">Welcome to RayDawn Admin</TypingAnimation>
         <p className="mt-1 text-1xl font-semibold text-white">Manage your portfolio content from here</p>
         </div>
         <button 

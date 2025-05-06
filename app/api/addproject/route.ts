@@ -1,6 +1,8 @@
+"use client"
+
 import {connectToDatabase} from "@/database";
 import Blog from '@/database/models/blogs';
-import { auth } from "@clerk/nextjs";
+import { useAuth } from "@clerk/nextjs";
 
 // Helper function to generate slug
 function generateSlug(title: string): string {
@@ -17,7 +19,7 @@ export async function POST(req: Request) {
         await connectToDatabase();
         
         // Get current user from Clerk
-        const { userId } = auth();
+        const { userId } = useAuth();
         
         if (!userId) {
             return new Response(JSON.stringify({ error: 'Not authenticated or missing user ID' }), {

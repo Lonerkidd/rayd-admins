@@ -6,13 +6,13 @@ import { useToast } from '@/hooks/use-toast';
 import ImageUploadSection from './ImageUploadSection';
 import FormFields from './FormFields';
 import { formSchema } from './types';
-import { Check } from 'lucide-react';
 import { uploadImage } from '@/lib/api'; // Make sure this is a function that uploads the image and returns { url }
 import { ShinyButton } from '@/components/magicui/shiny-button';
+import { InteractiveHoverButton } from "@/components/magicui/interactive-hover-button";
 
 const categories = [
-  'infographic', 'branding', 'illustration',
-  'web design', 'print', 'video', 'animation'
+    'Event', 'Publication', 'Infographic'
+    ,'Education'
 ];
 
 const UploadForm: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
@@ -20,8 +20,9 @@ const UploadForm: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [allCategories, setAllCategories] = useState<string[]>(categories);
 
-  const { register, handleSubmit, formState: { errors }, reset } = useForm({
+  const { register, handleSubmit, formState: { errors }, reset, setValue, watch } = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: '',
@@ -54,6 +55,13 @@ const UploadForm: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
     setIsSubmitting(true);
 
     try {
+      // Check if a new category was added
+      const categoryValue = data.category;
+      if (categoryValue && !categories.includes(categoryValue)) {
+        // If this is a new category, add it to our list
+        setAllCategories(prev => [...prev, categoryValue]);
+      }
+
       // Create FormData object to handle file upload
       const formData = new FormData();
       
@@ -114,7 +122,9 @@ const UploadForm: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
         <FormFields
           register={register}
           errors={errors}
-          categories={categories}
+          categories={allCategories}
+          setValue={setValue}
+          watch={watch}
         />
 
         <ImageUploadSection
@@ -125,6 +135,7 @@ const UploadForm: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
         />
 
         <div>
+        <InteractiveHoverButton>
           <ShinyButton
             type="submit"
             disabled={isSubmitting}
@@ -144,6 +155,7 @@ const UploadForm: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
               </>
             )}
           </ShinyButton>
+          </InteractiveHoverButton>
         </div>
       </form>
     </div>

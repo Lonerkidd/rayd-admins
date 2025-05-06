@@ -31,15 +31,14 @@ export function TeamSwitcher({
       <SidebarMenuItem>
         <SidebarMenuButton
           size="lg"
-          className="team-switcher-button"
+          className="team-switcher-button gap-1"
         >
           <div className="flex items-center justify-center">
-            {/* Logo container with gradient background */}
             <div className={`relative flex aspect-square items-center justify-center rounded-lg overflow-hidden ${
-              isSidebarCollapsed ? "w-11 h-11" : "w-12 h-12"
+              isSidebarCollapsed ? "w-9 h-9" : "w-12 h-12"
             }`}>
               {/* Gradient overlay */}
-              <div className="absolute inset-0 bg-black opacity-20"></div>
+              <div className="absolute inset-0 bg-black"></div>
               
               {/* Logo image */}
               <img

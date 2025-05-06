@@ -1,14 +1,39 @@
-import React from 'react';
-import { UseFormRegister, FieldErrors } from 'react-hook-form';
+import React, { useState } from 'react';
+import { UseFormRegister, FieldErrors, UseFormSetValue, UseFormWatch } from 'react-hook-form';
 import { FormValues } from './types';
 
 interface FormFieldsProps {
   register: UseFormRegister<FormValues>;
   errors: FieldErrors<FormValues>;
   categories: string[];
+  setValue: UseFormSetValue<FormValues>;
+  watch: UseFormWatch<FormValues>;
 }
 
-const FormFields: React.FC<FormFieldsProps> = ({ register, errors, categories }) => {
+const FormFields: React.FC<FormFieldsProps> = ({ register, errors, categories, setValue, watch }) => {
+  const [isNewCategory, setIsNewCategory] = useState(false);
+  const [newCategory, setNewCategory] = useState('');
+  const selectedCategory = watch('category');
+
+  // Handle the category selection change
+  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value;
+    if (value === 'add_new') {
+      setIsNewCategory(true);
+      setValue('category', ''); // Clear the category field temporarily
+    } else {
+      setIsNewCategory(false);
+      setValue('category', value);
+    }
+  };
+
+  // Handle the new category input
+  const handleNewCategoryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setNewCategory(value);
+    setValue('category', value); // Update the form value with the new category
+  };
+
   return (
     <>
       {/* Title */}
@@ -52,16 +77,30 @@ const FormFields: React.FC<FormFieldsProps> = ({ register, errors, categories })
           <label htmlFor="category" className="text-sm font-medium text-white">
             Category <span className="text-red-500">*</span>
           </label>
-          <select
-            id="category"
-            className="block w-full rounded-md border-gray-700 shadow-sm focus:border-[#0F9B99] focus:ring-[#0F9B99] bg-gray-800 px-3 py-2 text-sm border text-white"
-            {...register('category')}
-          >
-            <option value="">Select category</option>
-            {categories.map((category) => (
-              <option key={category} value={category}>{category}</option>
-            ))}
-          </select>
+          <div className="space-y-2">
+            <select
+              id="category-select"
+              className="block w-full rounded-md border-gray-700 shadow-sm focus:border-[#0F9B99] focus:ring-[#0F9B99] bg-gray-800 px-3 py-2 text-sm border text-white"
+              onChange={handleCategoryChange}
+              value={isNewCategory ? 'add_new' : selectedCategory}
+            >
+              <option value="">Select category</option>
+              {categories.map((category) => (
+                <option key={category} value={category}>{category}</option>
+              ))}
+              <option value="add_new">+ Add New </option>
+            </select>
+            
+            {isNewCategory && (
+              <input
+                type="text"
+                className="block w-full rounded-md border-gray-700 shadow-sm focus:border-[#0F9B99] focus:ring-[#0F9B99] bg-gray-800 px-3 py-2 text-sm border text-white mt-2"
+                placeholder="Enter new category"
+                value={newCategory}
+                onChange={handleNewCategoryChange}
+              />
+            )}
+          </div>
           {errors.category && (
             <p className="text-red-500 text-xs mt-1">{errors.category.message}</p>
           )}

@@ -8,11 +8,11 @@ const PortfolioPage = () => {
   const router = useRouter();
   return (
     
-      <div className="max-w-7xl mx-auto m-5">
+      <div>
         <BreadcrumbBar />
         <div className="flex flex-col md:flex-row md:items-center md:justify-between mt-6 ml-4 gap-2 mb-3">
           <div>
-            <h1 className="text-4xl font-heading font-bold text-white">Portfolio Gallery</h1>
+            <h1 className="text-3xl font-heading font-medium text-white">Portfolio Gallery</h1>
             <p className="mt-1 text-gray-400">Manage all your portfolio items</p>
           </div>
           <button 

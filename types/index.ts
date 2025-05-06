@@ -48,6 +48,7 @@ export interface BlogFormValues {
 export interface BlogFormProps {
   defaultValues?: Partial<BlogFormValues>;
   mode: 'create' | 'edit';
+  onSubmit: (updatedData: any) => Promise<void>;
 }
 
 export interface FormValues {
