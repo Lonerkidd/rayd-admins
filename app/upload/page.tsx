@@ -12,7 +12,7 @@ export default function UploadPage() {
       <SidebarInset>
     <div>
       <BreadcrumbBar />
-      <div className="flex items-center justify-between mb-3">
+      <div className="flex items-center justify-between mt-6 ml-4 gap-2 mb-3">
           <div>
             <h1 className="text-4xl font-heading font-bold text-white">Upload Portfolio Item</h1>
             <p className="mt-1 text-gray-400">Add new work to your portfolio collection</p>

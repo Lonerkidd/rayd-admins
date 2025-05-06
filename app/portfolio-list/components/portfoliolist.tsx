@@ -7,6 +7,7 @@ import PortfolioCard from '@/app/portfolio-list/components/portfoliocard';
 import Link from 'next/link';
 import { PlusCircle, RefreshCcw } from 'lucide-react';
 import { Button } from "@/components/ui/button";
+import { BlurFade } from "@/components/magicui/blur-fade";
 
 const PortfolioList: React.FC = () => {
   const [portfolioItems, setPortfolioItems] = useState<PortfolioItem[]>([]);
@@ -72,20 +73,20 @@ const PortfolioList: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-heading font-medium">Portfolio Items</h2>
+        <h2 className="text-2xl text-white font-heading font-medium">Portfolio Items</h2>
         <div className="flex space-x-4">
           <Button 
             onClick={refreshList}
             variant="outline"
-            className="text-sm flex items-center gap-1"
+            className="text-sm text-white flex items-center gap-1"
             disabled={loading}
           >
-            <RefreshCcw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
+            <RefreshCcw className={`h-4 text-white w-4 ${loading ? 'animate-spin' : ''}`} />
             Refresh
           </Button>
           <Link href="/upload">
-            <Button className="text-sm flex items-center gap-1">
-              <PlusCircle className="h-4 w-4" />
+            <Button className="text-sm flex items-center mr-4 gap-1">
+              <PlusCircle className="h-4  w-4" />
               New Item
             </Button>
           </Link>
@@ -98,7 +99,7 @@ const PortfolioList: React.FC = () => {
         </div>
       ) : portfolioItems.length === 0 ? (
         <div className="bg-transparent rounded-lg shadow-sm p-12 text-center">
-          <p className="text-gray-600">No portfolio items found. Add your first item!</p>
+          <p className="text-white">No portfolio items found. Add your first item!</p>
           <Link href="/upload">
             <Button className="mt-4">
               Create New Portfolio Item
@@ -106,10 +107,12 @@ const PortfolioList: React.FC = () => {
           </Link>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {portfolioItems.map((item) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 bg-transparent lg:grid-cols-3 gap-6">
+          {portfolioItems.map((item, idx) => (
             <div key={item._id} className="relative group">
+             <BlurFade  delay={0.25 + idx * 0.05} inView >
               <PortfolioCard item={item} onDelete={() => item._id && handleDelete(item._id)} isDeleting={deleting === item._id} />
+              </BlurFade>
             </div>
           ))}
         </div>

@@ -9,9 +9,6 @@ interface IBlog {
     imageType?: string;
     client: string;
     video?: string;
-    slug: string; // Changed to required
-    excerpt?: string;
-    tags?: string[];
     createdAt: Date;
     updatedAt: Date;
 }
@@ -48,19 +45,6 @@ const blogSchema = new Schema<IBlog>({
         type: String,
         required: true,
     },
-    slug: {
-        type: String,
-        required: true,
-        unique: true, // Ensure slugs are unique
-    },
-    excerpt: {
-        type: String,
-        required: false,
-    },
-    tags: {
-        type: [String],
-        required: false,
-    },
     createdAt: {
         type: Date,
         default: () => Date.now(),
@@ -87,16 +71,16 @@ blogSchema.pre('save', function(next) {
     // Update the updatedAt timestamp
     this.updatedAt = new Date();
     
-    // Generate slug from title if not provided
-    if (!this.slug && this.title) {
-        this.slug = generateSlug(this.title);
-    }
+    // // Generate slug from title if not provided
+    // if (!this.slug && this.title) {
+    //     this.slug = generateSlug(this.title);
+    // }
     
-    // Add a random string to ensure uniqueness if still missing
-    if (!this.slug) {
-        const randomString = Math.random().toString(36).substring(2, 10);
-        this.slug = `post-${randomString}`;
-    }
+    // // Add a random string to ensure uniqueness if still missing
+    // if (!this.slug) {
+    //     const randomString = Math.random().toString(36).substring(2, 10);
+    //     this.slug = `post-${randomString}`;
+    // }
     
     next();
 });

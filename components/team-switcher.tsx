@@ -1,17 +1,8 @@
 "use client"
 
 import * as React from "react"
-import { ChevronsUpDown, Plus } from "lucide-react"
+import { ChevronsUpDown } from "lucide-react"
 
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
 import {
   SidebarMenu,
   SidebarMenuButton,
@@ -27,69 +18,64 @@ export function TeamSwitcher({
     logo: string
   }[]
 }) {
-  const { isMobile } = useSidebar()
+  const { state } = useSidebar()
   const [activeTeam, setActiveTeam] = React.useState(teams[0])
+  const isSidebarCollapsed = state === "collapsed"
 
   if (!activeTeam) {
     return null
   }
 
-  const { state } = useSidebar()
-  const isSidebarCollapsed = state === "collapsed"
-
   return (
     <SidebarMenu>
       <SidebarMenuItem>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <SidebarMenuButton
-              size="lg"
-              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground "
-            >
-              <div className="bg-transparent text-sidebar-primary-foreground flex aspect-square size-13 items-center justify-center rounded-lg">
+        <SidebarMenuButton
+          size="lg"
+          className="team-switcher-button"
+        >
+          <div className="flex items-center justify-center">
+            {/* Logo container with gradient background */}
+            <div className={`relative flex aspect-square items-center justify-center rounded-lg overflow-hidden ${
+              isSidebarCollapsed ? "w-11 h-11" : "w-12 h-12"
+            }`}>
+              {/* Gradient overlay */}
+              <div className="absolute inset-0 bg-black opacity-20"></div>
+              
+              {/* Logo image */}
               <img
-                  src={activeTeam.logo} 
-                  alt={`${activeTeam.name} logo`}
-                  className={`${
-                    isSidebarCollapsed ? "size-6" : "size-13"
-                  }`}
-                />
-              </div>
-              <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="text-1xl font-bold">{activeTeam.name}</span>
-              </div>
-              <ChevronsUpDown className="ml-auto" />
-            </SidebarMenuButton>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent
-            className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
-            align="start"
-            side={isMobile ? "bottom" : "right"}
-            sideOffset={4}
-          >
-            <DropdownMenuLabel className="text-muted-foreground text-xs">
-              Company
-            </DropdownMenuLabel>
-            {teams.map((team, index) => (
-              <DropdownMenuItem
-                key={team.name}
-                onClick={() => setActiveTeam(team)}
-                className="gap-2 p-2"
-              >
-                <div className="flex size-6 items-center justify-center rounded-md border">
-                <img
-                    src={team.logo} 
-                    alt={`${team.name} logo`}
-                    className="size-4.5 shrink-0"
-                  />
-                </div>
-                {team.name}
-              </DropdownMenuItem>
-            ))}
-            <DropdownMenuSeparator />
-          </DropdownMenuContent>
-        </DropdownMenu>
+                src={activeTeam.logo} 
+                alt={`${activeTeam.name} logo`}
+                className={`z-10 ${
+                  isSidebarCollapsed ? "w-10 h-10" : "w-12 h-12"
+                }`}
+              />
+            </div>
+          </div>
+          
+          {!isSidebarCollapsed && (
+            <div className="grid flex-1 text-left text-sm leading-tight ml-3">
+              <span className="text-base font-bold text-white">{activeTeam.name}</span>
+            </div>
+          )}
+          
+          {!isSidebarCollapsed && (
+            <ChevronsUpDown className="ml-auto size-4 text-gray-400" />
+          )}
+        </SidebarMenuButton>
       </SidebarMenuItem>
+      
+      {/* Custom styles */}
+      <style jsx global>{`
+        .team-switcher-button {
+          border-radius: 12px !important;
+          transition: all 0.2s ease;
+        }
+        
+        .team-switcher-button:hover {
+          background: transparent !important;
+          box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+        }
+      `}</style>
     </SidebarMenu>
   )
 }

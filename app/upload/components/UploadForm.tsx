@@ -8,6 +8,7 @@ import FormFields from './FormFields';
 import { formSchema } from './types';
 import { Check } from 'lucide-react';
 import { uploadImage } from '@/lib/api'; // Make sure this is a function that uploads the image and returns { url }
+import { ShinyButton } from '@/components/magicui/shiny-button';
 
 const categories = [
   'infographic', 'branding', 'illustration',
@@ -124,10 +125,10 @@ const UploadForm: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
         />
 
         <div>
-          <button
+          <ShinyButton
             type="submit"
             disabled={isSubmitting}
-            className={`flex items-center justify-center w-full md:w-auto rounded-md bg-raydawn-purple px-6 py-3 text-sm font-medium text-white shadow-sm hover:bg-raydawn-dark-purple focus:outline-none focus:ring-2 focus:ring-raydawn-purple focus:ring-offset-2 ${isSubmitting ? 'opacity-70 cursor-not-allowed' : 'cursor-pointer'}`}
+            className={`flex items-center justify-center w-full rounded-md bg-teal px-6 py-3 text-sm font-medium text-white shadow-sm ${isSubmitting ? 'opacity-70 cursor-not-allowed' : 'cursor-pointer'}`}
           >
             {isSubmitting ? (
               <>
@@ -139,11 +140,10 @@ const UploadForm: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
               </>
             ) : (
               <>
-                <Check className="mr-1 h-4 w-4 border-2 rounded" />
                 Upload Portfolio Item
               </>
             )}
-          </button>
+          </ShinyButton>
         </div>
       </form>
     </div>
