@@ -7,8 +7,11 @@ interface IBlog {
     content: string;
     image?: Buffer;
     imageType?: string;
+    category?: string;
     client: string;
     video?: string;
+    slug?: string;
+    excerpt?: string;
     createdAt: Date;
     updatedAt: Date;
 }

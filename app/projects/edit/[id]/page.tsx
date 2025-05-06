@@ -20,7 +20,6 @@ export default function EditBlogPage() {
     category: string;
     video: string;
     excerpt: string;
-    tags: string[];
   } | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -92,7 +91,7 @@ export default function EditBlogPage() {
       );
     }
     
-    return <BlogForm mode="edit" defaultValues={{ ...blog, tags: blog.tags.join(', ') }} />;
+    return <BlogForm mode="edit" defaultValues={{ ...blog }} />;
   };
   
   return (

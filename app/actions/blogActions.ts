@@ -17,10 +17,10 @@ export async function getBlogPostAction(id: string) {
         content: blog.content,
         image: blog.image.toString('base64'),
         client: blog.client || '',
+        category: blog.category || '', 
         video: blog.video || '',
         slug: blog.slug || '',
-        excerpt: blog.excerpt || '',
-        tags: blog.tags || [], // Add tags with default empty array
+        excerpt: blog.excerpt || '', 
       };
     }
     
@@ -33,7 +33,6 @@ export async function getBlogPostAction(id: string) {
       video: blog.video || '',
       slug: blog.slug || '',
       excerpt: blog.excerpt || '',
-      tags: blog.tags || [], // Add tags with default empty array
     };
   } catch (error) {
     console.error('Error fetching blog post:', error);

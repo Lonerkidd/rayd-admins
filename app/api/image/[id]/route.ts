@@ -4,12 +4,12 @@ import { NextRequest } from 'next/server';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await connectToDatabase();
 
-    const { id } = params;
+    const { id } = await params;
 
     const blogPost = await Blog.findById(id).select("image imageType");
     if (!blogPost || !blogPost.image) {
