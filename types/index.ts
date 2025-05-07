@@ -35,28 +35,28 @@ export interface BlogFormValues {
   id?:string;
   title: string;
   content: string;
-  slug: string;
-  excerpt: string;
-  tags: string;
+  // slug: string;
+  // excerpt: string;
+  // tags: string;
   category: string;
   client: string;
   image?: File | string | null;
   video?: string;
-  author?: string;
+  // author?: string;
 }
 
 export interface BlogFormProps {
   defaultValues?: Partial<BlogFormValues>;
   mode: 'create' | 'edit';
-  onSubmit: (updatedData: any) => Promise<void>;
+  onSubmit?: (values: BlogFormValues) => Promise<void>;
 }
 
 export interface FormValues {
   title: string;
   content: string;
-  slug: string;
-  excerpt: string;
-  tags: string;
+  // slug: string;
+  // excerpt: string;
+  // tags: string;
   author:string
   video?: string;
   image?: File | string | null;
@@ -72,6 +72,14 @@ export interface PortfolioItem {
     client: string;
     videoLink?: string;
     photoLink?: string;
+  }
+
+export interface IUser {
+    id: string;
+    email: string;
+    password: string;
+    name: string;
+    role: 'user' | 'admin';
   }
 
 export interface Project {

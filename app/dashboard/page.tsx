@@ -39,7 +39,7 @@ export default function DashboardPage() {
             <h3 className="font-heading text-4xl font-bold text-white p-4 pb-0">Portfolio Items</h3>
             <div className="flex flex-col items-start gap-2 justify-center flex-grow px-4">
             <NumberTicker
-                value={18}
+                value={23}
                 className="whitespace-pre-wrap text-8xl font-medium tracking-tighter text-[#0F9B99] dark:text-white"
               />
               <p className="mt-1 text-1xl font-medium text-white">Total portfolio items</p>
@@ -52,7 +52,7 @@ export default function DashboardPage() {
             <h3 className="font-heading text-4xl font-bold text-white p-4 pb-0">Categories</h3>
             <div className="flex flex-col items-start gap-2 justify-center flex-grow px-4">
               <NumberTicker
-                value={8}
+                value={6}
                 className="whitespace-pre-wrap text-8xl font-medium tracking-tighter text-[#F57C1F] dark:text-white"
               />
               <p className="mt-1 mb-3 text-1xl font-medium text-white">Different content categories</p>
@@ -65,7 +65,7 @@ export default function DashboardPage() {
             <h3 className="font-heading text-4xl font-bold text-white p-4 pb-0">Clients</h3>
             <div className="flex flex-col items-start gap-2 justify-center flex-grow px-4">
             <NumberTicker
-              value={42}
+              value={75}
               className="whitespace-pre-wrap text-8xl font-medium tracking-tighter text-[#0F9B99] dark:text-white"
             />
               <p className="mt-1 text-1xl font-medium text-white">Total clients featured</p>

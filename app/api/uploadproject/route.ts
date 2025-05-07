@@ -2,8 +2,6 @@
 import { writeFile } from 'fs/promises';
 import { join } from 'path';
 import { v4 as uuidv4 } from 'uuid';
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/lib/auth";
 
 // Define allowed file types
 const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];

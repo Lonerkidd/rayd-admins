@@ -6,9 +6,8 @@ import { useToast } from '@/hooks/use-toast';
 import ImageUploadSection from './ImageUploadSection';
 import FormFields from './FormFields';
 import { formSchema } from './types';
-import { uploadImage } from '@/lib/api'; // Make sure this is a function that uploads the image and returns { url }
 import { ShinyButton } from '@/components/magicui/shiny-button';
-import { InteractiveHoverButton } from "@/components/magicui/interactive-hover-button";
+
 
 const categories = [
     'Event', 'Publication', 'Infographic'
@@ -135,8 +134,7 @@ const UploadForm: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
         />
 
         <div>
-        <InteractiveHoverButton>
-          <ShinyButton
+            <ShinyButton
             type="submit"
             disabled={isSubmitting}
             className={`flex items-center justify-center rounded-md bg-white px-6 py-3 text-sm font-medium text-white shadow-sm ${isSubmitting ? 'opacity-70 cursor-not-allowed' : 'cursor-pointer'}`}
@@ -155,7 +153,6 @@ const UploadForm: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
               </>
             )}
           </ShinyButton>
-          </InteractiveHoverButton>
         </div>
       </form>
     </div>

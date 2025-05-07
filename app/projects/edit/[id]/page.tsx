@@ -1,62 +1,52 @@
-'use client';
+'use client'
 
 import { useParams, useRouter } from 'next/navigation';
 import { BlogForm } from '@/components/blog/BlogForm';
 import { useEffect, useState } from 'react';
 import { getBlogPostAction, updateBlogPostAction } from '@/app/actions/blogActions';
-import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
-
+import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
+import { BlogFormValues } from '@/types';
 
 export default function EditBlogPage() {
   const params = useParams();
   const router = useRouter();
   const id = params.id as string;
-
   const [blog, setBlog] = useState<{
     id: string;
     title: string;
     content: string;
     image: string | null;
-    slug: string;
     client: string;
     category: string;
     video: string;
-    excerpt: string;
-    tags: string[];
   } | null>(null);
-
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
+  
   useEffect(() => {
     async function loadBlog() {
       if (!id || typeof id !== 'string') {
-        setError('Invalid blog post ID');
+        setError("Invalid blog post ID");
         setLoading(false);
         return;
       }
 
       try {
         const blogData = await getBlogPostAction(id);
+        console.log("Fetched Blog Data:", blogData);
+        
         if (blogData) {
           setBlog({
-            id: blogData.id,
-            title: blogData.title,
-            content: blogData.content,
-            image: blogData.image || null,
-            slug: blogData.slug,
-            client: blogData.client,
-            category: blogData.category,
-            video: blogData.video,
-            excerpt: blogData.excerpt,
-            tags: blogData.tags,
+            ...blogData,
+            // Don't modify the image here - just pass it as is
+            category: blogData.category || '',
           });
         } else {
-          setError('Blog post not found');
+          setError("Blog post not found");
         }
       } catch (error) {
         console.error('Error loading blog:', error);
-        setError('Failed to load blog post');
+        setError("Failed to load blog post");
       } finally {
         setLoading(false);
       }
@@ -64,20 +54,16 @@ export default function EditBlogPage() {
 
     loadBlog();
   }, [id]);
-
-  const handleUpdate = async (updatedData: any) => {
-    try {
-      setLoading(true);
-      await updateBlogPostAction(id, updatedData);
-      router.push('/portfolio-list'); // Redirect to the portfolio list after successful update
-    } catch (error) {
-      console.error('Error updating blog post:', error);
-      setError('Failed to update blog post');
-    } finally {
-      setLoading(false);
-    }
+  
+  // Handle successful update
+  const handleUpdateSuccess = () => {
+    // Show success message or redirect
+    console.log("Blog updated successfully!");
+    router.push('/'); // Or wherever you want to redirect after update
+    router.refresh(); // Refresh the page to show the updated data
   };
 
+  // Render content based on current state
   const renderContent = () => {
     if (loading) {
       return (
@@ -86,7 +72,7 @@ export default function EditBlogPage() {
         </div>
       );
     }
-
+  
     if (error) {
       return (
         <div className="bg-red-50 border-l-4 border-red-400 p-4 my-4">
@@ -99,7 +85,7 @@ export default function EditBlogPage() {
         </div>
       );
     }
-
+  
     if (!blog) {
       return (
         <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 my-4">
@@ -112,10 +98,25 @@ export default function EditBlogPage() {
         </div>
       );
     }
-
-    return <BlogForm mode="edit" defaultValues={{ ...blog, tags: blog.tags.join(', ') }} onSubmit={handleUpdate} />;
+    
+    return (
+      <BlogForm 
+        mode="edit" 
+        defaultValues={blog} 
+        onSubmit={async (updatedData: BlogFormValues) => {
+          try {
+            // Call the server action to update the blog post
+            await updateBlogPostAction(blog.id, updatedData);
+            handleUpdateSuccess();
+          } catch (error) {
+            console.error("Failed to update blog post:", error);
+            setError("Failed to update portfolio item. Please try again.");
+          }
+        }}
+      />
+    );
   };
-
+  
   return (
     <SidebarProvider>
       <SidebarInset>

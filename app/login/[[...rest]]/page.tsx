@@ -31,7 +31,7 @@ const LoginPage = () => {
           appearance={{
             elements: {
               formButtonPrimary: 'bg-gradient-to-r from-[#F57C1F] to-[#0F9B99] hover:opacity-90 text-white',
-              card: 'bg-transparent',
+              card: 'bg-transparent p-8 ml-17',
               headerTitle: 'text-white',
               headerSubtitle: 'text-gray-400',
               formFieldLabel: 'text-gray-300',

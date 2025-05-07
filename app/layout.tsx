@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import { cookies } from "next/headers";
-import { ThemeProvider } from "next-themes";
+
 import { ClerkProvider } from '@clerk/nextjs';
 import SidebarLayout from "@/components/SidebarLayout"; // Import the new wrapper
 import "./globals.css";

@@ -1,34 +1,49 @@
-import { useState, useRef, ChangeEvent, FormEvent } from 'react';
+import { useState, useRef, ChangeEvent, FormEvent, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { BlogFormValues } from '@/types';
-import { useSession } from 'next-auth/react'; // Assuming you're using NextAuth for user sessions
+
 
 const defaultFormValues: BlogFormValues = {  
   title: '',
   content: '',
-  slug: '',
-  excerpt: '',
   category: '',
-  tags: '',
   client: '',
   image: null,
   video: '',
 };
 
 export default function useBlogForm(
-  initialValues: Partial<BlogFormValues> = {},
+  defaultValues: Partial<BlogFormValues> = {},
   mode: 'create' | 'edit' = 'create'
 ) {
   const [formValues, setFormValues] = useState<BlogFormValues>({
     ...defaultFormValues,
-    ...initialValues,
+    ...defaultValues,
   });
-  const [imagePreview, setImagePreview] = useState<string | null>(`/api/image/${initialValues.id}`);
+  
+  // Initialize image preview based on mode and defaultValues
+  const [imagePreview, setImagePreview] = useState<string | null>(
+    mode === 'edit' && defaultValues.id 
+      ? `/api/image/${defaultValues.id}` 
+      : null
+  );
+  
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
-  const { data: session } = useSession();
+
+
+  // Update form values when defaultValues change
+  useEffect(() => {
+    if (defaultValues) {
+      // Initialize with default values while preserving current form state
+      setFormValues(prev => ({ 
+        ...prev, 
+        ...defaultValues,
+      }));
+    }
+  }, [defaultValues]);
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -69,35 +84,22 @@ export default function useBlogForm(
       formData.append('content', formValues.content);
       formData.append('category', formValues.category || ''); 
       formData.append('client', formValues.client || ''); 
-      if (formValues.slug) formData.append('slug', formValues.slug);
-      if (formValues.excerpt) formData.append('excerpt', formValues.excerpt);
       if (formValues.video) formData.append('video', formValues.video);
 
-      // Add author ID from session
-      if (session?.user && 'id' in session.user) {
-        formData.append('author', String(session.user.id));
-      } else {
-        throw new Error("You must be logged in to create a blog post");
-      }
-      
-      // Add tags - convert comma-separated string to array
-      if (formValues.tags) {
-        const tagsArray = formValues.tags
-          .split(',')
-          .map(tag => tag.trim())
-          .filter(tag => tag);
-        formData.append('tags', JSON.stringify(tagsArray));
-      }
-
-      // Add image if available
+      // Add image if available and it's a File object (new upload)
       if (formValues.image instanceof File) {
         formData.append('image', formValues.image);
-      } else if (typeof formValues.image === 'string' && formValues.image) {
-        formData.append('image', formValues.image);
+      }
+      
+      // If we're in edit mode and no new image is uploaded,
+      // we need to indicate that we're keeping the existing image
+      if (mode === 'edit' && !(formValues.image instanceof File)) {
+        // This will tell your API to keep the existing image
+        formData.append('keepExistingImage', 'true');
       }
 
       // Submit to API
-      const endpoint = mode === 'create' ? '/api/addPost' : `/api/updatePost/${initialValues.id}`;
+      const endpoint = mode === 'create' ? '/api/addPost' : `/api/updatePost/${defaultValues.id}`;
       const response = await fetch(endpoint, {
         method: mode === 'create' ? 'POST' : 'PUT',
         body: formData,
@@ -105,15 +107,21 @@ export default function useBlogForm(
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to save blog post');
+        throw new Error(errorData.error || 'Failed to save portfolio item');
       }
 
-      // Redirect after successful operation
-      router.push('/');
-      router.refresh();
+      // Handle successful submission (this will be called by the parent component)
+      if (mode === 'create') {
+        // Redirect after successful creation
+        router.push('/');
+        router.refresh();
+      }
+      // For edit mode, we'll let the parent component handle success
+
     } catch (err: any) {
       setError(err.message || 'An unexpected error occurred');
       console.error('Form submission error:', err);
+      throw err; // Rethrow to allow parent component to handle it
     } finally {
       setIsSubmitting(false);
     }
@@ -121,6 +129,13 @@ export default function useBlogForm(
 
   const handleCancel = () => {
     router.back();
+  };
+
+  // Function to remove the current image
+  const handleRemoveImage = () => {
+    if (fileInputRef.current) fileInputRef.current.value = '';
+    setFormValues(prev => ({ ...prev, image: null }));
+    setImagePreview(null);
   };
 
   return {
@@ -134,5 +149,6 @@ export default function useBlogForm(
     handleFileSelect,
     handleSubmit,
     handleCancel,
+    handleRemoveImage,
   };
 }

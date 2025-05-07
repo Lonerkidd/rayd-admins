@@ -2,7 +2,7 @@
 
 import {connectToDatabase} from "@/database";
 import Blog from '@/database/models/blogs';
-import { useAuth } from "@clerk/nextjs";
+
 
 // Helper function to generate slug
 function generateSlug(title: string): string {
@@ -17,16 +17,6 @@ function generateSlug(title: string): string {
 export async function POST(req: Request) {
     try {
         await connectToDatabase();
-        
-        // Get current user from Clerk
-        const { userId } = useAuth();
-        
-        if (!userId) {
-            return new Response(JSON.stringify({ error: 'Not authenticated or missing user ID' }), {
-                status: 401,
-                headers: { 'Content-Type': 'application/json' },
-            });
-        }
         
         // Check if the request is multipart form data or JSON
         const contentType = req.headers.get('content-type') || '';
@@ -58,10 +48,10 @@ export async function POST(req: Request) {
             data = await req.json();
         }
         
-        const { title, content, video, client, excerpt, tags, slug: providedSlug } = data;
+        const { title, content, video, client, excerpt, tags } = data;
 
-        // Generate slug from title if not provided
-        const slug = providedSlug || generateSlug(title);
+        // Generate slug from title
+        const slug = generateSlug(title);
         
         const blogData: any = {
             title,
@@ -71,7 +61,6 @@ export async function POST(req: Request) {
             slug,
             excerpt,
             tags,
-            userId, // Save the Clerk userId with the blog post
         };
 
         // Add image data if available
