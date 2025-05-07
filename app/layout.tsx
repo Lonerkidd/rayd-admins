@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import { cookies } from "next/headers";
 
-import { ClerkProvider } from '@clerk/nextjs';
+
 import SidebarLayout from "@/components/SidebarLayout"; // Import the new wrapper
 import "./globals.css";
 
@@ -25,9 +25,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="en" className={poppins.variable} suppressHydrationWarning>
       <body>
-        <ClerkProvider>
+        
           <SidebarLayout>{children}</SidebarLayout>
-        </ClerkProvider>
+        
       </body>
     </html>
   );
