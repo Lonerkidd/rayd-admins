@@ -1,5 +1,3 @@
-"use client"
-
 import {connectToDatabase} from "@/database";
 import Blog from '@/database/models/blogs';
 
