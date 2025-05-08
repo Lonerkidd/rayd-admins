@@ -2,7 +2,6 @@ import { useState, useRef, ChangeEvent, FormEvent, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { BlogFormValues } from '@/types';
 
-
 const defaultFormValues: BlogFormValues = {  
   title: '',
   content: '',
@@ -24,7 +23,7 @@ export default function useBlogForm(
   // Initialize image preview based on mode and defaultValues
   const [imagePreview, setImagePreview] = useState<string | null>(
     mode === 'edit' && defaultValues.id 
-      ? `/api/image/${defaultValues.id}` 
+      ? `/api/image/${defaultValues.id}?timestamp=${Date.now()}` 
       : null
   );
   
@@ -32,7 +31,6 @@ export default function useBlogForm(
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
-
 
   // Update form values when defaultValues change
   useEffect(() => {
@@ -76,6 +74,15 @@ export default function useBlogForm(
     setError(null);
 
     try {
+      // Validate required fields
+      if (!formValues.title.trim()) {
+        throw new Error('Title is required');
+      }
+      
+      if (!formValues.content.trim()) {
+        throw new Error('Content is required');
+      }
+
       // Prepare form data for submission
       const formData = new FormData();
       
@@ -89,20 +96,20 @@ export default function useBlogForm(
       // Add image if available and it's a File object (new upload)
       if (formValues.image instanceof File) {
         formData.append('image', formValues.image);
-      }
-      
-      // If we're in edit mode and no new image is uploaded,
-      // we need to indicate that we're keeping the existing image
-      if (mode === 'edit' && !(formValues.image instanceof File)) {
+      } else if (mode === 'edit' && imagePreview && imagePreview.includes(`/api/image/${defaultValues.id}`)) {
         // This will tell your API to keep the existing image
         formData.append('keepExistingImage', 'true');
       }
 
-      // Submit to API
-      const endpoint = mode === 'create' ? '/api/addPost' : `/api/updatePost/${defaultValues.id}`;
+      // Determine the correct endpoint
+      const endpoint = mode === 'create' ? '/api/addproject' : `/api/updatePost/${defaultValues.id}`;
+      
+      // Submit the form
       const response = await fetch(endpoint, {
         method: mode === 'create' ? 'POST' : 'PUT',
         body: formData,
+        // Don't set Content-Type header when sending FormData
+        // The browser will automatically set it with the correct boundary
       });
 
       if (!response.ok) {
@@ -110,7 +117,7 @@ export default function useBlogForm(
         throw new Error(errorData.error || 'Failed to save portfolio item');
       }
 
-      // Handle successful submission (this will be called by the parent component)
+      // Handle successful submission (for create mode)
       if (mode === 'create') {
         // Redirect after successful creation
         router.push('/');

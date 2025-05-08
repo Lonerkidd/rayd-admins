@@ -7,18 +7,17 @@ import { z } from "zod";
 const updateBlogSchema = z.object({
   title: z.string().min(3, { message: "Title must be at least 3 characters long" }).optional(),
   content: z.string().min(10, { message: "Content must be at least 10 characters long" }).optional(),
-  image: z.string().optional(),
-  slug: z.string().optional(),
-  client : z.string().optional(),
+  category: z.string().optional(),
+  client: z.string().optional(),
   excerpt: z.string().optional(),
   tags: z.array(z.string()).optional(),
   video: z.string().optional(),
+  keepExistingImage: z.string().optional(),
 });
 
 // Route to update a post
 export async function PUT(req: Request) {
     try {
-
         // Connect to database
         await connectToDatabase();
 
@@ -26,11 +25,48 @@ export async function PUT(req: Request) {
         const url = new URL(req.url);
         const postId = url.pathname.split("/").pop();
 
-        // Parse request body
-        const body = await req.json();
+        // Check if request is multipart (has file) or JSON
+        const contentType = req.headers.get('content-type') || '';
+        let data: Record<string, any> = {};
+        let imageBuffer: Buffer | null = null;
+        let imageType: string | null = null;
+        let keepExistingImage = false;
+
+        if (contentType.includes('multipart/form-data')) {
+            // Handle form data with possible file upload
+            const formData = await req.formData();
+            
+            // Process regular form fields
+            for (const [key, value] of formData.entries()) {
+                if (key !== 'image') {
+                    if (key === 'keepExistingImage' && value === 'true') {
+                        keepExistingImage = true;
+                    } else {
+                        data[key] = value;
+                    }
+                }
+            }
+            
+            // Process image file if present
+            const imageFile = formData.get('image') as File | null;
+            if (imageFile && imageFile instanceof File) {
+                const arrayBuffer = await imageFile.arrayBuffer();
+                imageBuffer = Buffer.from(arrayBuffer);
+                imageType = imageFile.type;
+            }
+        } else {
+            // Handle JSON data
+            data = await req.json();
+            
+            // Check if we should keep existing image
+            if (data.keepExistingImage === 'true') {
+                keepExistingImage = true;
+                delete data.keepExistingImage;
+            }
+        }
         
         // Validate input data
-        const validationResult = updateBlogSchema.safeParse(body);
+        const validationResult = updateBlogSchema.safeParse(data);
         if (!validationResult.success) {
           return NextResponse.json(
             { error: 'Validation error', details: validationResult.error.format() },
@@ -38,9 +74,10 @@ export async function PUT(req: Request) {
           );
         }
         
-        const data = validationResult.data;
+        // Get validated data
+        const validatedData = validationResult.data;
 
-        // Check if the blog exists and user is authorized to update it
+        // Check if the blog exists
         const existingBlog = await Blog.findById(postId);
         if (!existingBlog) {
             return NextResponse.json(
@@ -48,22 +85,28 @@ export async function PUT(req: Request) {
                 { status: 404 }
             );
         }
-        
-        // // Optional: Check if user is the author or has admin privileges
-        // if (existingBlog.author.toString() !== session.user.id && session.user.role !== 'admin') {
-        //     return NextResponse.json(
-        //         { message: "Not authorized to update this post" },
-        //         { status: 403 }
-        //     );
-        // }
+
+        // Prepare update object
+        const updateObject: any = {
+            ...validatedData,
+            updatedAt: new Date()
+        };
+
+        // Handle image update if there's a new image
+        if (imageBuffer && imageType) {
+            updateObject.image = imageBuffer;
+            updateObject.imageType = imageType;
+        } else if (!keepExistingImage && !imageBuffer) {
+            // If not keeping existing image and no new image provided, remove the image
+            updateObject.image = undefined;
+            updateObject.imageType = undefined;
+        }
+        // If keepExistingImage is true, don't modify the image fields
 
         // Update the blog post in the database
         const updatedPost = await Blog.findByIdAndUpdate(
             postId,
-            { 
-                $set: data,
-                updatedAt: new Date()
-            },
+            { $set: updateObject },
             { new: true, runValidators: true }
         );
 
