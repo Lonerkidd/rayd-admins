@@ -1,13 +1,16 @@
 import { connectToDatabase } from "@/database";
 import Blog from '@/database/models/blogs';
 import { NextResponse } from "next/server";
+import { auth } from "@clerk/nextjs/server";
 
-
-// 
-  
 
 // Create handler for deleting the posts
 export async function DELETE(request: Request) {
+    const { userId } = await auth()
+
+  if (!userId) {
+    return NextResponse.json({ error: 'Error: No signed in user' }, { status: 401 })
+  }
     try{
         // Connect to database
         await connectToDatabase();

@@ -5,6 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useToast } from '@/hooks/use-toast';
 import ImageUploadSection from './ImageUploadSection';
 import FormFields from './FormFields';
+import { useSession } from '@clerk/nextjs';
 import { formSchema } from './types';
 import { ShinyButton } from '@/components/magicui/shiny-button';
 
@@ -15,6 +16,8 @@ const categories = [
 ];
 
 const UploadForm: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
+  const { session } = useSession();
+  const token = session?.getToken();
   const { toast } = useToast();
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -80,8 +83,9 @@ const UploadForm: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
 
       const response = await fetch('/api/addproject', {
         method: 'POST',
-        // Don't set Content-Type header when sending FormData
-        // The browser will automatically set it with the correct boundary
+        headers : {
+          'Authorization': `Bearer ${token}`,
+        },
         body: formData,
       });
 

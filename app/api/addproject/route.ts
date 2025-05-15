@@ -1,5 +1,7 @@
 import {connectToDatabase} from "@/database";
 import Blog from '@/database/models/blogs';
+import { auth } from "@clerk/nextjs/server";
+import { NextResponse } from "next/server";
 
 
 // Helper function to generate slug
@@ -13,6 +15,11 @@ function generateSlug(title: string): string {
 }
 
 export async function POST(req: Request) {
+    const { userId } = await auth()
+
+    if (!userId) {
+    return NextResponse.json({ error: 'Error: No signed in user' }, { status: 401 })
+    }
     try {
         await connectToDatabase();
         

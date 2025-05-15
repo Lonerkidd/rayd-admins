@@ -1,4 +1,7 @@
+'use client'
+
 import { useState, useRef, ChangeEvent, FormEvent, useEffect } from 'react';
+import { useSession } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import { BlogFormValues } from '@/types';
 
@@ -27,6 +30,9 @@ export default function useBlogForm(
       : null
   );
   
+  const { session } = useSession()
+  const token = session?.getToken();
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -107,6 +113,9 @@ export default function useBlogForm(
       // Submit the form
       const response = await fetch(endpoint, {
         method: mode === 'create' ? 'POST' : 'PUT',
+        headers : {
+          'Authorization': `Bearer ${token}`,
+        },
         body: formData,
         // Don't set Content-Type header when sending FormData
         // The browser will automatically set it with the correct boundary

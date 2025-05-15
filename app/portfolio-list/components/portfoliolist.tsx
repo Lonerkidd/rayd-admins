@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import { getPosts, deletePost } from '@/lib/api';
+import { useSession } from '@clerk/nextjs';
 import { useToast } from '@/hooks/use-toast';
 import { PortfolioItem } from '@/types';
 import PortfolioCard from '@/app/portfolio-list/components/portfoliocard';
@@ -10,6 +11,8 @@ import { Button } from "@/components/ui/button";
 import { BlurFade } from "@/components/magicui/blur-fade";
 
 const PortfolioList: React.FC = () => {
+  const { session } = useSession();
+  const token = session?.getToken() as unknown as string;
   const [portfolioItems, setPortfolioItems] = useState<PortfolioItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState<string | null>(null);
@@ -48,7 +51,7 @@ const PortfolioList: React.FC = () => {
   const handleDelete = async (id: string) => {
     try {
       setDeleting(id);
-      await deletePost(id);
+      await deletePost(id, token);
       toast({
         title: "Success",
         description: "Portfolio item deleted successfully",

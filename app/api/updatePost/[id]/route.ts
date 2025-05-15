@@ -1,7 +1,9 @@
 import { connectToDatabase } from "@/database";
 import Blog from '@/database/models/blogs';
+import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { z } from "zod";
+
 
 // Validation schema for blog updates
 const updateBlogSchema = z.object({
@@ -17,6 +19,11 @@ const updateBlogSchema = z.object({
 
 // Route to update a post
 export async function PUT(req: Request) {
+    const { userId } = await auth()
+
+  if (!userId) {
+    return NextResponse.json({ error: 'Error: No signed in user' }, { status: 401 })
+  }
     try {
         // Connect to database
         await connectToDatabase();
