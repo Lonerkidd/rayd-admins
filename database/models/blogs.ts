@@ -7,9 +7,10 @@ interface IBlog {
     content: string;
     image?: Buffer;
     imageType?: string;
-    category?: string;
+    category: string;
     client: string;
-    video?: string;
+    videoUrl?: string;
+    imageUrl?: string;
     slug?: string;
     excerpt?: string;
     createdAt: Date;
@@ -40,9 +41,15 @@ const blogSchema = new Schema<IBlog>({
         type: String,
         required: false,
     },
-    video: {
+    category: {
         type: String,
-        required: false,
+        required: [ true, 'Category is required'],
+    },
+    videoUrl: {
+        type: String
+    },
+    imageUrl: {
+        type: String
     },
     client: {
         type: String,

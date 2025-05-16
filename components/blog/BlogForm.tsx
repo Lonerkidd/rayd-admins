@@ -27,7 +27,7 @@ export function BlogForm({ defaultValues, mode, onSubmit }: BlogFormProps) {
   } = useBlogForm(defaultValues, mode);
 
   // Fixed predefined categories - you can modify this or fetch from your database
-  const categories = ['Web Design', 'Mobile App', 'Branding', 'UI/UX', 'Illustration'];
+  const categories = ['Event', 'Publication', 'Infographic','Education'];
   const [isNewCategory, setIsNewCategory] = useState(false);
   const [newCategory, setNewCategory] = useState('');
 

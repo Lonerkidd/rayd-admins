@@ -14,7 +14,7 @@ const poppins = Poppins({
 
 export const metadata: Metadata = {
   title: "RayDawn Communication Admin Website",
-  description: "Portfolio Management Dashboard",
+  description: "RayDawn Portfolio Management Dashboard",
   };
 
 

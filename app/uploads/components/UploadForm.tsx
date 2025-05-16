@@ -69,7 +69,7 @@ const UploadForm: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
       
       // Add text fields to FormData
       formData.append('title', data.title);
-      formData.append('content', data.description); // mapped from "description" to "content"
+      formData.append('content', data.description); 
       formData.append('category', data.category);
       formData.append('client', data.client);
       if (data.videoLink) formData.append('video', data.videoLink);
@@ -83,9 +83,6 @@ const UploadForm: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
 
       const response = await fetch('/api/addproject', {
         method: 'POST',
-        headers : {
-          'Authorization': `Bearer ${token}`,
-        },
         body: formData,
       });
 

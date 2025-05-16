@@ -52,27 +52,24 @@ export async function POST(req: Request) {
             // Handle JSON data
             data = await req.json();
         }
+         console.log('Received data:', data);
         
-        const { title, content, video, client, excerpt, tags } = data;
-
-        // Generate slug from title
-        const slug = generateSlug(title);
-        
+        // Map to your schema fields
         const blogData: any = {
-            title,
-            content,
-            video,
-            client,
-            slug,
-            excerpt,
-            tags,
+            title: data.title,
+            content: data.content,
+            category: data.category,
+            client: data.client,
+            videoUrl: data.video || null,
+            imageUrl: data.photoLink || null,
+            slug: generateSlug(data.title),
         };
 
-        // Add image data if available
         if (imageBuffer && imageType) {
             blogData.image = imageBuffer;
             blogData.imageType = imageType;
         }
+        console.log('Saving blogData:', blogData);
         
         const newPost = new Blog(blogData);
         const savedPost = await newPost.save();
