@@ -24,7 +24,7 @@ export async function getBlogPostAction(id: string) {
       image: blog.image ? 'exists' : null, // Just indicate image exists, will be fetched via API
       category: blog.category || '',
       client: blog.client || '',
-      video: blog.video || '',
+      video: blog.videoUrl || '',
     };
   } catch (error) {
     console.error('Error fetching blog post:', error);
@@ -68,7 +68,7 @@ export async function updateBlogPostAction(id: string, updatedData: BlogFormValu
       category: updatedBlog.category || '',
       image: updatedBlog.image ? 'exists' : null,
       client: updatedBlog.client || '',
-      video: updatedBlog.video || '',
+      video: updatedBlog.videoUrl || '',
     };
   } catch (error) {
     console.error('Error updating blog post:', error);
