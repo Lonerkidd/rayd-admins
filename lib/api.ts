@@ -34,7 +34,6 @@ export async function uploadImage(file: File): Promise<{ url: string }> {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(portfolioItem),
       });
@@ -79,7 +78,6 @@ export async function updatePost(id: string, token :string, data: FormData | Par
      {
       response = await axios.put(`/api/updatePost/${id}`, data, {
         headers: {
-          Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
       });
@@ -98,7 +96,6 @@ export async function deletePost(id: string, token:string): Promise<{ message: s
     const response = await fetch(`/api/deletePost/${id}`, {
       method: 'DELETE',
       headers: {
-        Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',
       },
     });
